@@ -88,7 +88,7 @@ def create_all_items(world: RabbitAndSteelWorld) -> None:
     shuffle_itemsets = world.options.shuffle_item_sets.value
     if shuffle_itemsets:
         for itemset_item in itemset_items:
-            itempool += [world.create_item(itemset_item)]
+            itempool += [world.create_item_with_type(itemset_item, "Itemsets")]
 
     create_real_item_chests = world.options.checks_per_item_in_chest.value  # logical or shuffle individual items (might not actually want that)
 
@@ -100,15 +100,15 @@ def create_all_items(world: RabbitAndSteelWorld) -> None:
     upgrade_sanity = world.options.upgrade_sanity
     if upgrade_sanity == "simple":
         for upgrade_item in upgrade_items:
-            itempool += [world.create_item(upgrade_item)]
+            itempool += [world.create_item_with_type(upgrade_item, "Upgrades")]
     elif upgrade_sanity == "full":
         for upgrade_item in specific_upgrade_items:
-            itempool += [world.create_item(upgrade_item)]
+            itempool += [world.create_item_with_type(upgrade_item, "Upgrades")]
 
     potion_sanity = world.options.potion_sanity
     if potion_sanity != "none":
         for potion_item in potion_items:
-            itempool += [world.create_item(potion_item)]
+            itempool += [world.create_item_with_type(potion_item, "Potions")]
 
     number_of_items = len(itempool)
 

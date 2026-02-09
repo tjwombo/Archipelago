@@ -32,7 +32,7 @@ class RabbitAndSteelWorld(World):
         "Kingdoms": Items.kingdom_names,
         "Classes": Items.class_names,
         "Itemsets": Items.itemset_names,
-        "Upgrades": Items.upgrade_names,
+        "Upgrades": Items.upgrade_names + Items.specific_upgrade_names,
         "Potions": Items.potion_names,
         "ShiraVictory": Items.shira_defeat_names,
     }
