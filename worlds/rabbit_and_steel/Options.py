@@ -6,7 +6,8 @@ from typing import Union, Dict, List, TYPE_CHECKING
 from Options import Range, DefaultOnToggle, Toggle, OptionCounter, PerGameCommonOptions, \
     Visibility, OptionSet, Choice, OptionGroup
 
-from .Items import class_items, kingdom_items
+from .Items import kingdom_items, extra_kingdom_items, class_items
+from .Constants import NEST, ARSNEAL, DARKHOUSE, STREETS, LAKESIDE, DEPTHS, AURUM, SANCTUM
 
 if TYPE_CHECKING:
     from .World import RabbitAndSteelWorld
@@ -19,23 +20,39 @@ class KingdomSanity(DefaultOnToggle):
     display_name = "Kingdom Sanity"
 
 
+class RunType(Choice):
+    """
+    Determines which kingdoms can be visited during a run
+    Kingdom: Only base kingdoms will be visited
+    Extra: Only extra kingdoms will be visited
+    Either: Any kingdom can be visited determined by the starting route
+    Chaotic: Any kingdom can be visited in Chaotic Random fashion
+    """
+    display_name = "Run Type"
+    option_kingdom = 0
+    option_extra = 1
+    option_either = 2
+    option_chaotic = 3
+    default = 3
+
+
 class MaxKingdomsPerRun(Range):
     """
-    How many kingdoms you visit before heading to the pale keep.
+    How many kingdoms you visit before heading to the pale keep or Reflecting Pool.
     If progressive regions and/or kingdom sanity is on,
     your run ends in a failure if you are not allowed to visit enough kingdoms.
     """
     display_name = "All Kingdoms"
     range_start = 1
-    range_end = 5
+    range_end = 8
     default = 3
 
 
 class ProgressiveRegions(Toggle):
     """
     Introduces items that increases the amount regions you are currently allowed to visit in a run.
-    Includes Pale Keep and Moonlit Pinnacle.
-    Outskirts is always accessible.
+    Includes Pale Keep/Looping Hallway and Moonlit Pinnacle/Reflecting Pool.
+    Outskirts or Geode is always accessible.
     """
     display_name = "Progressive Regions"
 
@@ -44,10 +61,13 @@ class ExcludeKingdoms(OptionSet):
     """
     What kingdoms, if any, should not be added to the pool of locations.
     There will always be a generic location that any class can obtain.
-    Avaliable Options: [ "Scholar's Nest", "King's Arsenal", "Red Darkhouse", "Churchmouse Streets", "Emerald Lakeside"]
+    Available Options: [ "Scholar's Nest", "King's Arsenal", "Red Darkhouse", "Churchmouse Streets", "Emerald Lakeside",
+                        "Darkhouse Depths", "Atelier Aurum", "Subterra Sanctum"]
+    Additionally you can exclude one of Kingdom Outskirts/Crack In The Geode, The Pale Keep/Looping Hallway,
+    and Moonlit Pinnacle/Reflecting Pool depending on your RunType
     """
     display_name = "Excluded Kingdoms"
-    valid_keys = kingdom_items.keys() - {"The Pale Keep", "Moonlit Pinnacle"}
+    valid_keys = (kingdom_items | extra_kingdom_items).keys()
 
 
 class UseKingdomOrderWithKingdomSanity(Toggle):
@@ -76,18 +96,24 @@ class KingdomOrder(OptionCounter):
     max = 5
     visibility = Visibility.all
     valid_keys = frozenset([
-        "Scholar's Nest",
-        "King's Arsenal",
-        "Red Darkhouse",
-        "Churchmouse Streets",
-        "Emerald Lakeside",
+        NEST,
+        ARSNEAL,
+        DARKHOUSE,
+        STREETS,
+        LAKESIDE,
+        DEPTHS,
+        AURUM,
+        SANCTUM
     ])
     default = {
-        "Scholar's Nest": 0,
-        "King's Arsenal": 0,
-        "Red Darkhouse": 0,
-        "Churchmouse Streets": 0,
-        "Emerald Lakeside": 0,
+        NEST: 0,
+        ARSNEAL: 0,
+        DARKHOUSE: 0,
+        STREETS: 0,
+        LAKESIDE: 0,
+        DEPTHS: 0,
+        AURUM: 0,
+        SANCTUM: 0
     }
 
 
@@ -102,8 +128,8 @@ class ExcludeClass(OptionSet):
     """
     What class, if any, should not be accounted for in logic.
     Throughout the run you will not be able to play that class at all.
-    Avaliable Options:
-    ["Wizard", "Assassin", "Heavyblade", "Dancer", "Druid", "Spellsword", "Sniper", "Bruiser", "Defender", "Ancient"]
+    Available Options: ["Wizard", "Assassin", "Heavyblade", "Dancer", "Druid", "Spellsword", "Sniper", "Bruiser",
+                        "Defender", "Ancient", "Hammermaid", "Pyromancer", "Grenadier", "Shadow"]
     """
     display_name = "Exclude Class"
     valid_keys = class_items.keys()
@@ -113,19 +139,26 @@ class ChecksPerClass(OptionSet):
     """
     What classes should have locations associated with them.
     There will always be a generic location that any class can obtain.
-    Available Options:
-    ["Wizard", "Assassin", "Heavyblade", "Dancer", "Druid", "Spellsword", "Sniper", "Bruiser", "Defender", "Ancient"]
+    Available Options: ["Wizard", "Assassin", "Heavyblade", "Dancer", "Druid", "Spellsword", "Sniper", "Bruiser",
+                        "Defender", "Ancient","Hammermaid", "Pyromancer", "Grenadier", "Shadow"]
     _ALL can be used to put checks on all classes
     """
     display_name = "Checks Per Class"
-    valid_keys = class_items.keys() & {"_ALL"}
+    valid_keys = class_items.keys() | {"_ALL"}
 
 
-class ShuffleItemSets(Toggle):
+class ItemSanity(Choice):
     """
-    Item sets must be found before they can appear in treasure spheres
+    What is required to have an item appear in a non AP treasuresphere
+    None: Any item is always available
+    Itemset: Receiving the itemset unlocks all the items in the itemset
+    Full: Need to get each individual item unlocked
     """
-    display_name = "Shuffle Item Sets"
+    display_name = "Item Sanity"
+    option_none = 0
+    option_itemset = 1
+    option_full = 2
+    default = 0
 
 
 # TODO add option for modded items
@@ -175,16 +208,28 @@ class GoalCondition(Choice):
     """
     display_name = "Goal Condition"
     option_shira = 1
+    option_witch = 2
+    option_both = 3
     default = 1
 
 
 class ShiraDefeats(Range):
     """
-    If goal is set to Shira, how many unique classes must defeat Shira to goal
+    How many unique classes must defeat Shira to goal if included in goal
     """
     display_name = "Required Shira Kills"
     range_start = 1
-    range_end = 10
+    range_end = 14
+    default = 1
+
+
+class WitchDefeats(Range):
+    """
+    How many unique classes must defeat Witch to goal if included in goal
+    """
+    display_name = "Required Witch Kills"
+    range_start = 1
+    range_end = 14
     default = 1
 
 
@@ -205,6 +250,7 @@ class ShopSanity(Choice):
 @dataclass
 class RabbitAndSteelOptions(PerGameCommonOptions):
     kingdom_sanity: KingdomSanity
+    run_type: RunType
     max_kingdoms_per_run: MaxKingdomsPerRun
     progressive_regions: ProgressiveRegions
     excluded_kingdoms: ExcludeKingdoms
@@ -213,12 +259,13 @@ class RabbitAndSteelOptions(PerGameCommonOptions):
     class_sanity: ClassSanity
     exclude_class: ExcludeClass
     checks_per_class: ChecksPerClass
-    shuffle_item_sets: ShuffleItemSets
+    item_sanity: ItemSanity
     checks_per_item_in_chest: ChecksPerItemInChest
     upgrade_sanity: UpgradeSanity
     potion_sanity: PotionSanity
     goal_condition: GoalCondition
     shira_defeats: ShiraDefeats
+    witch_defeats: WitchDefeats
     shop_sanity: ShopSanity
 
 
@@ -234,17 +281,17 @@ def get_option_value(world: RabbitAndSteelWorld, player: int, name: str) -> Unio
 option_groups = [
     OptionGroup(
         "Kingdom Options",
-        [KingdomSanity, MaxKingdomsPerRun, ProgressiveRegions, ExcludeKingdoms, UseKingdomOrderWithKingdomSanity,
-         KingdomOrder]
+        [KingdomSanity, RunType, MaxKingdomsPerRun, ProgressiveRegions, ExcludeKingdoms,
+         UseKingdomOrderWithKingdomSanity, KingdomOrder]
     ),
     OptionGroup(
         "Gameplay Options",
-        [ClassSanity, ExcludeClass, ChecksPerClass, ShuffleItemSets, ChecksPerItemInChest, UpgradeSanity, PotionSanity,
+        [ClassSanity, ExcludeClass, ChecksPerClass, ItemSanity, ChecksPerItemInChest, UpgradeSanity, PotionSanity,
          ShopSanity],
     ),
     OptionGroup(
         "Goal Options",
-        [GoalCondition, ShiraDefeats],
+        [GoalCondition, ShiraDefeats, WitchDefeats],
     ),
 ]
 
