@@ -7,7 +7,7 @@ from Options import Range, DefaultOnToggle, Toggle, OptionCounter, PerGameCommon
     Visibility, OptionSet, Choice, OptionGroup
 
 from .Items import kingdom_items, extra_kingdom_items, class_items
-from .Constants import NEST, ARSNEAL, DARKHOUSE, STREETS, LAKESIDE, DEPTHS, AURUM, SANCTUM
+from .Constants import NEST, ARSENAL, DARKHOUSE, STREETS, LAKESIDE, DEPTHS, AURUM, SANCTUM
 
 if TYPE_CHECKING:
     from .World import RabbitAndSteelWorld
@@ -97,7 +97,7 @@ class KingdomOrder(OptionCounter):
     visibility = Visibility.all
     valid_keys = frozenset([
         NEST,
-        ARSNEAL,
+        ARSENAL,
         DARKHOUSE,
         STREETS,
         LAKESIDE,
@@ -107,7 +107,7 @@ class KingdomOrder(OptionCounter):
     ])
     default = {
         NEST: 0,
-        ARSNEAL: 0,
+        ARSENAL: 0,
         DARKHOUSE: 0,
         STREETS: 0,
         LAKESIDE: 0,

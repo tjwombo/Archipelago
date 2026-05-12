@@ -1,12 +1,12 @@
 OUTSKIRTS = "Kingdom Outskirts"
-NEST = "Scholar's Nest"
-ARSNEAL = "King's Arsenal"
+NEST = "Scholar\'s Nest"
+ARSENAL = "King\'s Arsenal"
 DARKHOUSE = "Red Darkhouse"
 STREETS = "Churchmouse Streets"
 LAKESIDE = "Emerald Lakeside"
 KEEP = "The Pale Keep"
 PINNACLE = "Moonlit Pinnacle"
-GEODE = "Crack In The Geode"
+GEODE = "Crack in the Geode"
 DEPTHS = "Darkhouse Depths"
 AURUM = "Atelier Aurum"
 SANCTUM = "Subterra Sanctum"
@@ -28,10 +28,10 @@ PYROMANCER = "Pyromancer"
 GRENADIER = "Grenadier"
 SHADOW = "Shadow"
 
-kingdom_names = [OUTSKIRTS, NEST, ARSNEAL, DARKHOUSE, STREETS, LAKESIDE, KEEP, PINNACLE]
+kingdom_names = [OUTSKIRTS, NEST, ARSENAL, DARKHOUSE, STREETS, LAKESIDE, KEEP, PINNACLE]
 extra_kingdom_names = [GEODE, DEPTHS, AURUM, SANCTUM, HALLWAY, POOL]
-all_kingdom_order_kingdom_names = [NEST, ARSNEAL, DARKHOUSE, STREETS, LAKESIDE, DEPTHS, AURUM, SANCTUM]
-kingdom_order_kingdom_names = [NEST, ARSNEAL, DARKHOUSE, STREETS, LAKESIDE]
+all_kingdom_order_kingdom_names = [NEST, ARSENAL, DARKHOUSE, STREETS, LAKESIDE, DEPTHS, AURUM, SANCTUM]
+kingdom_order_kingdom_names = [NEST, ARSENAL, DARKHOUSE, STREETS, LAKESIDE]
 extra_kingdom_order_kingdom_names = [DEPTHS, AURUM, SANCTUM]
 class_names = [WIZARD, ASSASSIN, HEAVYBLADE, DANCER, DRUID, SPELLSWORD, SNIPER, BRUISER, DEFENDER,
                ANCIENT, HAMMERMAID, PYROMANCER, GRENADIER, SHADOW]

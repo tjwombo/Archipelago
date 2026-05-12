@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from BaseClasses import Location
 from . import Items
 from .Constants import WIZARD, ASSASSIN, HEAVYBLADE, DANCER, DRUID, SPELLSWORD, SNIPER, BRUISER, \
-                DEFENDER, ANCIENT, HAMMERMAID, PYROMANCER, GRENADIER, SHADOW, OUTSKIRTS, NEST, ARSNEAL, \
+                DEFENDER, ANCIENT, HAMMERMAID, PYROMANCER, GRENADIER, SHADOW, OUTSKIRTS, NEST, ARSENAL, \
                 DARKHOUSE, STREETS, LAKESIDE, KEEP, PINNACLE, GEODE, DEPTHS, AURUM, SANCTUM, HALLWAY, POOL
 
 if TYPE_CHECKING:
@@ -170,7 +170,7 @@ for location in generic_kingdom_locations:
 
 kings_arsenal_table = {}
 for location in generic_kingdom_locations:
-    kings_arsenal_table[ARSNEAL + " " + location] = location_id
+    kings_arsenal_table[ARSENAL + " " + location] = location_id
     location_id += 1
 
 red_darkhouse_table = {}
@@ -204,7 +204,7 @@ for location in generic_kingdom_locations:
     location_id += 1
 
 # Helper dictionary to get the locations from the 5+3 main kingdoms from their name
-kingdom_to_locations = {NEST: scholars_nest_table, ARSNEAL: kings_arsenal_table,
+kingdom_to_locations = {NEST: scholars_nest_table, ARSENAL: kings_arsenal_table,
                         DARKHOUSE: red_darkhouse_table, STREETS: churchmouse_streets_table,
                         LAKESIDE: emerald_lakeside_table}
 
@@ -261,7 +261,7 @@ for location in item_locations:
 
 kings_arsenal_chest_item_table = {}
 for location in item_locations:
-    kings_arsenal_chest_item_table[ARSNEAL + " Chest " + location] = location_id
+    kings_arsenal_chest_item_table[ARSENAL + " Chest " + location] = location_id
     location_id += 1
 
 red_darkhouse_chest_item_table = {}
@@ -305,7 +305,7 @@ for location in item_locations:
     location_id += 1
 
 kingdom_to_chest_locations = {NEST: scholars_nest_chest_item_table,
-                              ARSNEAL: kings_arsenal_chest_item_table,
+                              ARSENAL: kings_arsenal_chest_item_table,
                               DARKHOUSE: red_darkhouse_chest_item_table,
                               STREETS: churchmouse_streets_chest_item_table,
                               LAKESIDE: emerald_lakeside_chest_item_table,
@@ -347,7 +347,7 @@ wizard_tables = {
     OUTSKIRTS: wizard_outskirts_table,
     GEODE: wizard_geode_table,
     NEST: wizard_nest_table,
-    ARSNEAL: wizard_arsenal_table,
+    ARSENAL: wizard_arsenal_table,
     DARKHOUSE: wizard_darkhouse_table,
     STREETS: wizard_streets_table,
     LAKESIDE: wizard_lakeside_table,
@@ -379,7 +379,7 @@ assassin_tables = {
     OUTSKIRTS: assassin_outskirts_table,
     GEODE: assassin_geode_table,
     NEST: assassin_nest_table,
-    ARSNEAL: assassin_arsenal_table,
+    ARSENAL: assassin_arsenal_table,
     DARKHOUSE: assassin_darkhouse_table,
     STREETS: assassin_streets_table,
     LAKESIDE: assassin_lakeside_table,
@@ -411,7 +411,7 @@ heavyblade_tables = {
     OUTSKIRTS: heavyblade_outskirts_table,
     GEODE: heavyblade_geode_table,
     NEST: heavyblade_nest_table,
-    ARSNEAL: heavyblade_arsenal_table,
+    ARSENAL: heavyblade_arsenal_table,
     DARKHOUSE: heavyblade_darkhouse_table,
     STREETS: heavyblade_streets_table,
     LAKESIDE: heavyblade_lakeside_table,
@@ -443,7 +443,7 @@ dancer_tables = {
     OUTSKIRTS: dancer_outskirts_table,
     GEODE: dancer_geode_table,
     NEST: dancer_nest_table,
-    ARSNEAL: dancer_arsenal_table,
+    ARSENAL: dancer_arsenal_table,
     DARKHOUSE: dancer_darkhouse_table,
     STREETS: dancer_streets_table,
     LAKESIDE: dancer_lakeside_table,
@@ -475,7 +475,7 @@ druid_tables = {
     OUTSKIRTS: druid_outskirts_table,
     GEODE: druid_geode_table,
     NEST: druid_nest_table,
-    ARSNEAL: druid_arsenal_table,
+    ARSENAL: druid_arsenal_table,
     DARKHOUSE: druid_darkhouse_table,
     STREETS: druid_streets_table,
     LAKESIDE: druid_lakeside_table,
@@ -507,7 +507,7 @@ spellsword_tables = {
     OUTSKIRTS: spellsword_outskirts_table,
     GEODE: spellsword_geode_table,
     NEST: spellsword_nest_table,
-    ARSNEAL: spellsword_arsenal_table,
+    ARSENAL: spellsword_arsenal_table,
     DARKHOUSE: spellsword_darkhouse_table,
     STREETS: spellsword_streets_table,
     LAKESIDE: spellsword_lakeside_table,
@@ -539,7 +539,7 @@ sniper_tables = {
     OUTSKIRTS: sniper_outskirts_table,
     GEODE: sniper_geode_table,
     NEST: sniper_nest_table,
-    ARSNEAL: sniper_arsenal_table,
+    ARSENAL: sniper_arsenal_table,
     DARKHOUSE: sniper_darkhouse_table,
     STREETS: sniper_streets_table,
     LAKESIDE: sniper_lakeside_table,
@@ -571,7 +571,7 @@ bruiser_tables = {
     OUTSKIRTS: bruiser_outskirts_table,
     GEODE: bruiser_geode_table,
     NEST: bruiser_nest_table,
-    ARSNEAL: bruiser_arsenal_table,
+    ARSENAL: bruiser_arsenal_table,
     DARKHOUSE: bruiser_darkhouse_table,
     STREETS: bruiser_streets_table,
     LAKESIDE: bruiser_lakeside_table,
@@ -603,7 +603,7 @@ defender_tables = {
     OUTSKIRTS: defender_outskirts_table,
     GEODE: defender_geode_table,
     NEST: defender_nest_table,
-    ARSNEAL: defender_arsenal_table,
+    ARSENAL: defender_arsenal_table,
     DARKHOUSE: defender_darkhouse_table,
     STREETS: defender_streets_table,
     LAKESIDE: defender_lakeside_table,
@@ -635,7 +635,7 @@ ancient_tables = {
     OUTSKIRTS: ancient_outskirts_table,
     GEODE: ancient_geode_table,
     NEST: ancient_nest_table,
-    ARSNEAL: ancient_arsenal_table,
+    ARSENAL: ancient_arsenal_table,
     DARKHOUSE: ancient_darkhouse_table,
     STREETS: ancient_streets_table,
     LAKESIDE: ancient_lakeside_table,
@@ -667,7 +667,7 @@ hammermaid_tables = {
     OUTSKIRTS: hammermaid_outskirts_table,
     GEODE: hammermaid_geode_table,
     NEST: hammermaid_nest_table,
-    ARSNEAL: hammermaid_arsenal_table,
+    ARSENAL: hammermaid_arsenal_table,
     DARKHOUSE: hammermaid_darkhouse_table,
     STREETS: hammermaid_streets_table,
     LAKESIDE: hammermaid_lakeside_table,
@@ -699,7 +699,7 @@ pyromancer_tables = {
     OUTSKIRTS: pyromancer_outskirts_table,
     GEODE: pyromancer_geode_table,
     NEST: pyromancer_nest_table,
-    ARSNEAL: pyromancer_arsenal_table,
+    ARSENAL: pyromancer_arsenal_table,
     DARKHOUSE: pyromancer_darkhouse_table,
     STREETS: pyromancer_streets_table,
     LAKESIDE: pyromancer_lakeside_table,
@@ -731,7 +731,7 @@ grenadier_tables = {
     OUTSKIRTS: grenadier_outskirts_table,
     GEODE: grenadier_geode_table,
     NEST: grenadier_nest_table,
-    ARSNEAL: grenadier_arsenal_table,
+    ARSENAL: grenadier_arsenal_table,
     DARKHOUSE: grenadier_darkhouse_table,
     STREETS: grenadier_streets_table,
     LAKESIDE: grenadier_lakeside_table,
@@ -763,7 +763,7 @@ shadow_tables = {
     OUTSKIRTS: shadow_outskirts_table,
     GEODE: shadow_geode_table,
     NEST: shadow_nest_table,
-    ARSNEAL: shadow_arsenal_table,
+    ARSENAL: shadow_arsenal_table,
     DARKHOUSE: shadow_darkhouse_table,
     STREETS: shadow_streets_table,
     LAKESIDE: shadow_lakeside_table,
@@ -806,7 +806,7 @@ for location in shop_locations:
     location_id += 1
 kings_arsenal_shop_table = {}
 for location in shop_locations:
-    kings_arsenal_shop_table[ARSNEAL + " Shop " + location] = location_id
+    kings_arsenal_shop_table[ARSENAL + " Shop " + location] = location_id
     location_id += 1
 red_darkhouse_shop_table = {}
 for location in shop_locations:
@@ -842,7 +842,7 @@ for location in shop_locations:
     location_id += 1
 
 kingdom_to_shop_locations = {NEST: scholars_nest_shop_table,
-                             ARSNEAL: kings_arsenal_shop_table,
+                             ARSENAL: kings_arsenal_shop_table,
                              DARKHOUSE: red_darkhouse_shop_table,
                              STREETS: churchmouse_streets_shop_table,
                              LAKESIDE: emerald_lakeside_shop_table,

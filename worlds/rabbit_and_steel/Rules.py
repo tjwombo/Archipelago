@@ -3,15 +3,15 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from rule_builder.options import OptionFilter
-from rule_builder.rules import Has, HasGroup, Rule, HasGroupUnique, True_, HasAny, HasFromListUnique, False_
+from rule_builder.rules import Has, HasGroup, Rule, HasGroupUnique, True_, HasFromListUnique, False_, CanReachRegion
 from . import Items
 
 from BaseClasses import ItemClassification
 from .Options import KingdomSanity, ProgressiveRegions, UseKingdomOrderWithKingdomSanity, ClassSanity, RunType
-from .Constants import OUTSKIRTS, GEODE, NEST, ARSNEAL, DARKHOUSE, STREETS, LAKESIDE, DEPTHS, \
-                        AURUM, SANCTUM, KEEP, HALLWAY, PINNACLE, POOL, WIZARD, ASSASSIN, HEAVYBLADE, DANCER, DRUID, \
-                        SPELLSWORD, SNIPER, BRUISER, DEFENDER, ANCIENT, HAMMERMAID, PYROMANCER, GRENADIER, SHADOW, \
-                        kingdom_names, extra_kingdom_names, shira_defeat_names, witch_defeat_names
+from .Constants import OUTSKIRTS, GEODE, NEST, ARSENAL, DARKHOUSE, STREETS, LAKESIDE, DEPTHS, \
+    AURUM, SANCTUM, KEEP, HALLWAY, PINNACLE, POOL, WIZARD, ASSASSIN, HEAVYBLADE, DANCER, DRUID, \
+    SPELLSWORD, SNIPER, BRUISER, DEFENDER, ANCIENT, HAMMERMAID, PYROMANCER, GRENADIER, SHADOW, \
+    kingdom_names, extra_kingdom_names, shira_defeat_names, witch_defeat_names
 
 if TYPE_CHECKING:
     from .World import RabbitAndSteelWorld
@@ -47,48 +47,30 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
                        (class_sanity_is_off | HasGroup("Classes")))
 
     def has_kingdom_sanity_items_to_reach_order(our_order: int, our_kingdom: str) -> Rule:
-        if our_order <= 1:
+        if our_order == 0:
             return True_()
-        kingdoms_of_order = []
-        for (kingdom, order) in kingdom_order.items():
-            if kingdom in excluded_kingdoms or order == -1:
-                continue
+        rule = False_()
+        for kingdom in [k for k, v in kingdom_order.items() if v == our_order]:
             if run_type != world.options.run_type.option_chaotic:
                 if kingdom in kingdom_names and our_kingdom not in kingdom_names:
                     continue
                 elif kingdom in extra_kingdom_names and our_kingdom not in extra_kingdom_names:
                     continue
-            if order == our_order:
-                kingdoms_of_order += [kingdom]
-        print(f"{kingdoms_of_order} {our_order} {our_kingdom}")
-        return HasAny(*kingdoms_of_order) & has_kingdom_sanity_items_to_reach_order(our_order - 1, our_kingdom)
+            rule = rule | CanReachRegion(kingdom)
+        return rule
 
     def set_kingdoms_connection_rules(kingdom: str) -> Rule:
         kingdom_check = (kingdom_sanity_is_off |
-                         (Has(kingdom) & has_kingdom_sanity_items_to_reach_order(kingdom_order[kingdom], kingdom)) |
-                         (Has(kingdom) & kingdom_sanity_kingdom_order_is_off))
-        '''
-        if kingdom_sanity:
-            if not state.has(kingdom, world.player):
-                return False
-
-            if kingdom_sanity_kingdom_order and not has_kingdom_sanity_items_to_reach_order(state, kingdom_order[kingdom]):
-                return False
-                
-        kingdom_sanity -> 
-            !Has(kingdom) -> False
-            (kingdom_sanity_kingdom_order & !has_kingdom_sanity_items_to_reach_order) -> False
-
-        !A | (B & D) | (B & !C)
-        '''
+                         (Has(kingdom) & (has_kingdom_sanity_items_to_reach_order(kingdom_order[kingdom] - 1, kingdom)
+                                          | kingdom_sanity_kingdom_order_is_off)))
 
         regions_required = 1
         if kingdom_sanity_is_off or not kingdom_sanity_kingdom_order_is_off:
             regions_required = kingdom_order[kingdom]
 
-        progressive_check = progressive_regions_is_off | Has("Progressive Region", count=regions_required)
+        regions_check = progressive_regions_is_off | Has("Progressive Region", count=regions_required)
 
-        return kingdom_check & progressive_check
+        return kingdom_check & regions_check
 
     kingdom_outskirts = None
     if OUTSKIRTS not in world.options.excluded_kingdoms:
@@ -106,13 +88,13 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
             geode_to_nest = world.get_entrance(GEODE + " to " + NEST)
             world.set_rule(geode_to_nest, set_kingdoms_connection_rules(NEST))
 
-    if ARSNEAL not in excluded_kingdoms:
+    if ARSENAL not in excluded_kingdoms:
         if kingdom_outskirts is not None:
-            outskirts_to_arsenal = world.get_entrance(OUTSKIRTS + " to " + ARSNEAL)
-            world.set_rule(outskirts_to_arsenal, set_kingdoms_connection_rules(ARSNEAL))
+            outskirts_to_arsenal = world.get_entrance(OUTSKIRTS + " to " + ARSENAL)
+            world.set_rule(outskirts_to_arsenal, set_kingdoms_connection_rules(ARSENAL))
         if crack_in_the_geode is not None and run_type == RunType.option_chaotic:
-            geode_to_arsenal = world.get_entrance(GEODE + " to " + ARSNEAL)
-            world.set_rule(geode_to_arsenal, set_kingdoms_connection_rules(ARSNEAL))
+            geode_to_arsenal = world.get_entrance(GEODE + " to " + ARSENAL)
+            world.set_rule(geode_to_arsenal, set_kingdoms_connection_rules(ARSENAL))
 
     if DARKHOUSE not in excluded_kingdoms:
         if kingdom_outskirts is not None:
@@ -191,7 +173,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
         satisfies_kingdom_checks = (kingdom_sanity_is_off |
                                     (Has(kingdom) & kingdom_sanity_kingdom_order &
-                                        has_kingdom_sanity_items_to_reach_order(max_kingdoms_per_run + 0, kingdom)) |
+                                     has_kingdom_sanity_items_to_reach_order(max_kingdoms_per_run + 0, kingdom)) |
                                     (Has(kingdom) & kingdom_sanity_kingdom_order_is_off & satisfies_run_type))
         '''
         if kingdom_sanity:
@@ -441,7 +423,8 @@ def set_all_location_rules(world: RabbitAndSteelWorld) -> None:
                 continue
             class_victory = world.get_location("Shira - " + class_name)
             class_item = Items.RabbitAndSteelItem("Shira Defeat - " + class_name, ItemClassification.progression,
-                                                  Items.shira_defeat_items["Shira Defeat - " + class_name], world.player)
+                                                  Items.shira_defeat_items["Shira Defeat - " + class_name],
+                                                  world.player)
             class_victory.place_locked_item(class_item)
     if world.options.goal_condition == world.options.goal_condition.option_witch or \
             world.options.goal_condition == world.options.goal_condition.option_both:
@@ -450,7 +433,8 @@ def set_all_location_rules(world: RabbitAndSteelWorld) -> None:
                 continue
             class_victory = world.get_location("Witch - " + class_name)
             class_item = Items.RabbitAndSteelItem("Witch Defeat - " + class_name, ItemClassification.progression,
-                                                  Items.witch_defeat_items["Witch Defeat - " + class_name], world.player)
+                                                  Items.witch_defeat_items["Witch Defeat - " + class_name],
+                                                  world.player)
             class_victory.place_locked_item(class_item)
 
 
