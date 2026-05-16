@@ -38,23 +38,20 @@ def create_all_regions(world: RabbitAndSteelWorld) -> None:
                     regions.append(region)
 
     # Find the classes that will have checks in the last kingdom
-    class_checks_for_boss = Items.class_names
+    class_checks_for_boss = [class_names for class_names in Items.class_names
+                             if class_names not in world.options.exclude_class.value]
     # TODO: Use below if finishing runs aren't a goal condition
     # class_checks_for_boss = world.options.checks_per_class
 
     # Add the class regions for the Moonlit Pinnacle
     if PINNACLE not in world.options.excluded_kingdoms:
         for class_name in class_checks_for_boss:
-            if class_name in world.options.exclude_class:
-                continue
             region = Region(PINNACLE + " - " + class_name, world.player, world.multiworld)
             regions.append(region)
 
     # Add the class regions for the Reflecting Pool
     if POOL not in world.options.excluded_kingdoms:
         for class_name in class_checks_for_boss:
-            if class_name in world.options.exclude_class:
-                continue
             region = Region(POOL + " - " + class_name, world.player, world.multiworld)
             regions.append(region)
 
@@ -142,7 +139,8 @@ def connect_regions(world: RabbitAndSteelWorld) -> None:
                     kingdom_region.connect(kingdom_class_region, kingdom_name + " - " + class_name)
 
     # Find the classes that will have checks in the last kingdom
-    class_checks_for_boss = Items.class_names
+    class_checks_for_boss = [class_names for class_names in Items.class_names
+                             if class_names not in world.options.exclude_class.value]
     # TODO: Use below if finishing runs aren't a goal condition
     # class_checks_for_boss = world.options.checks_per_class
 

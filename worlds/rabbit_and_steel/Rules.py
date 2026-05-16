@@ -399,7 +399,8 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
                 world.set_rule(kingdom_to_class, class_sanity_is_off | Has(SHADOW))
 
     # Find the classes that will have checks in the last kingdom
-    class_checks_for_boss = Items.class_names
+    class_checks_for_boss = [class_names for class_names in Items.class_names
+                             if class_names not in world.options.exclude_class.value]
     # TODO: Use below if finishing runs aren't a goal condition
     # class_checks_for_boss = world.options.checks_per_class
 
