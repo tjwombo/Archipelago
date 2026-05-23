@@ -198,7 +198,7 @@ specific_items_names = ["Raven Grimoire", "Blackwing Staff", "Curse Talon", "Dar
                         "Firststrike Bracelet", "Obsidian Rod", "Darkglass Spear", "Timespace Dagger",
                         "Quartz Shield", "Pocketwatch", "Nova Crown", "Blackhole Charm", "Twinstar Earrings",
                         "Kyou No Omikuji", "Youkai Bracelet", "Oni Staff", "Kappa Shield", "Usagi Kamen",
-                        "Red Tanzaku", "Vega Spear", "Altai Dagger", "Ghost Spear", "Phantom Dagger",
+                        "Red Tanzaku", "Vega Spear", "Altair Dagger", "Ghost Spear", "Phantom Dagger",
                         "Cursed Candlestaff", "Haunted Gloves", "Old Bonnet", "Maid Outfit", "Calling Bell",
                         "Smoke Shield", "Grandmaster Spear", "Teacher Knife", "Tactician Rod", "Spiked Shield",
                         "Battlemaiden Armor", "Gladiator Helmet", "Lancer Gauntlets", "Lion Charm", "Bluebolt Staff",

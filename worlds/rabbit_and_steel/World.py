@@ -138,7 +138,7 @@ class RabbitAndSteelWorld(World):
     def generate_early(self) -> None:
         # Check if there are enough classes for the options
         if self.options.checks_per_class.__contains__("_ALL"):
-            self.options.checks_per_class.value = set(class_names)
+            self.options.checks_per_class.value = set(class_names) - set(self.options.exclude_class)
 
         shared_classes = list(set(self.options.checks_per_class) & set(self.options.exclude_class))
         if len(shared_classes) != 0:
