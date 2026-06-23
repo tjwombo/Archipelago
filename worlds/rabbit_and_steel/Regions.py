@@ -87,7 +87,7 @@ def connect_regions(world: RabbitAndSteelWorld) -> None:
             kingdom_region = world.get_region(kingdom_name)
             if kingdom_outskirts is not None:
                 kingdom_outskirts.connect(kingdom_region, OUTSKIRTS + " to " + kingdom_name)
-            if crack_in_the_geode is not None and run_type == RunType.option_chaotic:
+            if crack_in_the_geode is not None and run_type == RunType.option_combined:
                 crack_in_the_geode.connect(kingdom_region, GEODE + " to " + kingdom_name)
 
     # Connects the extra regions minus the Reflecting Pool to Crack In The Geode or Kingdom Outskirts if Chaotic
@@ -97,7 +97,7 @@ def connect_regions(world: RabbitAndSteelWorld) -> None:
 
         if kingdom_name not in world.options.excluded_kingdoms:
             kingdom_region = world.get_region(kingdom_name)
-            if kingdom_outskirts is not None and run_type == RunType.option_chaotic:
+            if kingdom_outskirts is not None and run_type == RunType.option_combined:
                 kingdom_outskirts.connect(kingdom_region, OUTSKIRTS + " to " + kingdom_name)
             if crack_in_the_geode is not None:
                 crack_in_the_geode.connect(kingdom_region, GEODE + " to " + kingdom_name)
@@ -111,14 +111,14 @@ def connect_regions(world: RabbitAndSteelWorld) -> None:
         if PINNACLE not in world.options.excluded_kingdoms:
             moonlit_pinnacle = world.get_region(PINNACLE)
             pale_keep.connect(moonlit_pinnacle, KEEP + " to " + PINNACLE)
-        if POOL not in world.options.excluded_kingdoms and run_type == RunType.option_chaotic:
+        if POOL not in world.options.excluded_kingdoms and run_type == RunType.option_combined:
             reflecting_pool = world.get_region(POOL)
             pale_keep.connect(reflecting_pool, KEEP + " to " + POOL)
 
     # Connects the Looping Hallway to the Reflecting Pool and the Moonlit Pinnacle if Chaotic
     if HALLWAY not in world.options.excluded_kingdoms:
         looping_hallway = world.get_region(HALLWAY)
-        if PINNACLE not in world.options.excluded_kingdoms and run_type == RunType.option_chaotic:
+        if PINNACLE not in world.options.excluded_kingdoms and run_type == RunType.option_combined:
             moonlit_pinnacle = world.get_region(PINNACLE)
             looping_hallway.connect(moonlit_pinnacle, HALLWAY + " to " + PINNACLE)
         if POOL not in world.options.excluded_kingdoms:

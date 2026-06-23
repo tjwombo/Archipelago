@@ -51,7 +51,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
             return True_()
         rule = False_()
         for kingdom in [k for k, v in kingdom_order.items() if v == our_order]:
-            if run_type != world.options.run_type.option_chaotic:
+            if run_type != world.options.run_type.option_combined:
                 if kingdom in kingdom_names and our_kingdom not in kingdom_names:
                     continue
                 elif kingdom in extra_kingdom_names and our_kingdom not in extra_kingdom_names:
@@ -65,7 +65,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
                                           | kingdom_sanity_kingdom_order_is_off)))
 
         regions_required = 1
-        if kingdom_sanity_is_off or not kingdom_sanity_kingdom_order_is_off:
+        if kingdom_sanity_is_off and not kingdom_sanity_kingdom_order_is_off:
             regions_required = kingdom_order[kingdom]
 
         regions_check = progressive_regions_is_off | Has("Progressive Region", count=regions_required)
@@ -84,7 +84,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
         if kingdom_outskirts is not None:
             outskirts_to_nest = world.get_entrance(OUTSKIRTS + " to " + NEST)
             world.set_rule(outskirts_to_nest, set_kingdoms_connection_rules(NEST))
-        if crack_in_the_geode is not None and run_type == RunType.option_chaotic:
+        if crack_in_the_geode is not None and run_type == RunType.option_combined:
             geode_to_nest = world.get_entrance(GEODE + " to " + NEST)
             world.set_rule(geode_to_nest, set_kingdoms_connection_rules(NEST))
 
@@ -92,7 +92,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
         if kingdom_outskirts is not None:
             outskirts_to_arsenal = world.get_entrance(OUTSKIRTS + " to " + ARSENAL)
             world.set_rule(outskirts_to_arsenal, set_kingdoms_connection_rules(ARSENAL))
-        if crack_in_the_geode is not None and run_type == RunType.option_chaotic:
+        if crack_in_the_geode is not None and run_type == RunType.option_combined:
             geode_to_arsenal = world.get_entrance(GEODE + " to " + ARSENAL)
             world.set_rule(geode_to_arsenal, set_kingdoms_connection_rules(ARSENAL))
 
@@ -100,7 +100,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
         if kingdom_outskirts is not None:
             outskirts_to_darkhouse = world.get_entrance(OUTSKIRTS + " to " + DARKHOUSE)
             world.set_rule(outskirts_to_darkhouse, set_kingdoms_connection_rules(DARKHOUSE))
-        if crack_in_the_geode is not None and run_type == RunType.option_chaotic:
+        if crack_in_the_geode is not None and run_type == RunType.option_combined:
             geode_to_darkhouse = world.get_entrance(GEODE + " to " + DARKHOUSE)
             world.set_rule(geode_to_darkhouse, set_kingdoms_connection_rules(DARKHOUSE))
 
@@ -108,7 +108,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
         if kingdom_outskirts is not None:
             outskirts_to_streets = world.get_entrance(OUTSKIRTS + " to " + STREETS)
             world.set_rule(outskirts_to_streets, set_kingdoms_connection_rules(STREETS))
-        if crack_in_the_geode is not None and run_type == RunType.option_chaotic:
+        if crack_in_the_geode is not None and run_type == RunType.option_combined:
             geode_to_streets = world.get_entrance(GEODE + " to " + STREETS)
             world.set_rule(geode_to_streets, set_kingdoms_connection_rules(STREETS))
 
@@ -116,12 +116,12 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
         if kingdom_outskirts is not None:
             outskirts_to_lakeside = world.get_entrance(OUTSKIRTS + " to " + LAKESIDE)
             world.set_rule(outskirts_to_lakeside, set_kingdoms_connection_rules(LAKESIDE))
-        if crack_in_the_geode is not None and run_type == RunType.option_chaotic:
+        if crack_in_the_geode is not None and run_type == RunType.option_combined:
             geode_to_lakeside = world.get_entrance(GEODE + " to " + LAKESIDE)
             world.set_rule(geode_to_lakeside, set_kingdoms_connection_rules(LAKESIDE))
 
     if DEPTHS not in excluded_kingdoms:
-        if kingdom_outskirts is not None and run_type == RunType.option_chaotic:
+        if kingdom_outskirts is not None and run_type == RunType.option_combined:
             outskirts_to_depths = world.get_entrance(OUTSKIRTS + " to " + DEPTHS)
             world.set_rule(outskirts_to_depths, set_kingdoms_connection_rules(DEPTHS))
         if crack_in_the_geode is not None:
@@ -129,7 +129,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
             world.set_rule(geode_to_depths, set_kingdoms_connection_rules(DEPTHS))
 
     if AURUM not in excluded_kingdoms:
-        if kingdom_outskirts is not None and run_type == RunType.option_chaotic:
+        if kingdom_outskirts is not None and run_type == RunType.option_combined:
             outskirts_to_aurum = world.get_entrance(OUTSKIRTS + " to " + AURUM)
             world.set_rule(outskirts_to_aurum, set_kingdoms_connection_rules(AURUM))
         if crack_in_the_geode is not None:
@@ -137,7 +137,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
             world.set_rule(geode_to_aurum, set_kingdoms_connection_rules(AURUM))
 
     if SANCTUM not in excluded_kingdoms:
-        if kingdom_outskirts is not None and run_type == RunType.option_chaotic:
+        if kingdom_outskirts is not None and run_type == RunType.option_combined:
             outskirts_to_sanctum = world.get_entrance(OUTSKIRTS + " to " + SANCTUM)
             world.set_rule(outskirts_to_sanctum, set_kingdoms_connection_rules(SANCTUM))
         if crack_in_the_geode is not None:
@@ -150,7 +150,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
     if KEEP not in excluded_kingdoms:
         if OUTSKIRTS not in excluded_kingdoms:
             outskirts_to_keep = world.get_entrance(OUTSKIRTS + " to " + KEEP)
-        if GEODE not in excluded_kingdoms and run_type == RunType.option_chaotic:
+        if GEODE not in excluded_kingdoms and run_type == RunType.option_combined:
             geode_to_keep = world.get_entrance(GEODE + " to " + KEEP)
 
     outskirts_to_hallway = None
@@ -158,13 +158,13 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
     if HALLWAY not in excluded_kingdoms:
         if GEODE not in excluded_kingdoms:
             geode_to_hallway = world.get_entrance(GEODE + " to " + HALLWAY)
-        if OUTSKIRTS not in excluded_kingdoms and run_type == RunType.option_chaotic:
+        if OUTSKIRTS not in excluded_kingdoms and run_type == RunType.option_combined:
             outskirts_to_hallway = world.get_entrance(OUTSKIRTS + " to " + HALLWAY)
 
     def set_penultimate_rules(kingdom) -> Rule:
         # Ensure the penultimate kingdom only counts kingdoms that are possible to show up on its route
         satisfies_run_type = False_()
-        if world.options.run_type == world.options.run_type.option_chaotic:
+        if world.options.run_type == world.options.run_type.option_combined:
             satisfies_run_type = HasGroupUnique("OrderedKingdoms", max_kingdoms_per_run + 0)
         elif kingdom == KEEP:
             satisfies_run_type = HasGroupUnique("BaseKingdoms", max_kingdoms_per_run + 0)
@@ -216,7 +216,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
     if PINNACLE not in excluded_kingdoms:
         if KEEP not in excluded_kingdoms:
             keep_to_pinnacle = world.get_entrance(KEEP + " to " + PINNACLE)
-        if HALLWAY not in excluded_kingdoms and run_type == RunType.option_chaotic:
+        if HALLWAY not in excluded_kingdoms and run_type == RunType.option_combined:
             hallway_to_pinnacle = world.get_entrance(HALLWAY + " to " + PINNACLE)
 
     keep_to_pool = None
@@ -224,7 +224,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
     if POOL not in excluded_kingdoms:
         if HALLWAY not in excluded_kingdoms:
             hallway_to_pool = world.get_entrance(HALLWAY + " to " + POOL)
-        if KEEP not in excluded_kingdoms and run_type == RunType.option_chaotic:
+        if KEEP not in excluded_kingdoms and run_type == RunType.option_combined:
             keep_to_pool = world.get_entrance(KEEP + " to " + POOL)
 
     def set_ultimate_rules(kingdom) -> Rule:

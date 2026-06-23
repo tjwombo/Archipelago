@@ -32,7 +32,7 @@ class RunType(Choice):
     option_kingdom = 0
     option_extra = 1
     option_either = 2
-    option_chaotic = 3
+    option_combined = 3
     default = 3
 
 

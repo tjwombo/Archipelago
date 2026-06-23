@@ -68,7 +68,7 @@ class RabbitAndSteelWorld(World):
     def assign_kingdom_order_groups(self) -> None:
         run_type = self.options.run_type.value
 
-        if run_type == self.options.run_type.option_chaotic:
+        if run_type == self.options.run_type.option_combined:
             self.assign_kingdom_order(all_kingdom_order_kingdom_names)
         elif run_type == self.options.run_type.option_kingdom:
             self.assign_kingdom_order(kingdom_order_kingdom_names)
