@@ -26,7 +26,7 @@ class RunType(Choice):
     Kingdom: Only base kingdoms will be visited
     Extra: Only extra kingdoms will be visited
     Either: Any kingdom can be visited determined by the starting route
-    Chaotic: Any kingdom can be visited in Chaotic Random fashion
+    Combined: Any kingdom can be visited
     """
     display_name = "Run Type"
     option_kingdom = 0

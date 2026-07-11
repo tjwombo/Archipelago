@@ -65,7 +65,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
                                           | kingdom_sanity_kingdom_order_is_off)))
 
         regions_required = 1
-        if kingdom_sanity_is_off and not kingdom_sanity_kingdom_order_is_off:
+        if kingdom_sanity_is_off and kingdom_sanity_kingdom_order:
             regions_required = kingdom_order[kingdom]
 
         regions_check = progressive_regions_is_off | Has("Progressive Region", count=regions_required)
@@ -175,26 +175,6 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
                                     (Has(kingdom) & kingdom_sanity_kingdom_order &
                                      has_kingdom_sanity_items_to_reach_order(max_kingdoms_per_run + 0, kingdom)) |
                                     (Has(kingdom) & kingdom_sanity_kingdom_order_is_off & satisfies_run_type))
-        '''
-        if kingdom_sanity:
-            if not state.has(KEEP, world.player):
-                return False
-
-            if kingdom_sanity_kingdom_order and 
-                    not has_kingdom_sanity_items_to_reach_order(state, max_kingdoms_per_run + 1):
-                return False
-
-            if not kingdom_sanity_kingdom_order and
-                    not state.has_group_unique("OrderedKingdoms", world.player, max_kingdoms_per_run + 0):
-                return False
-                
-        kingdom_sanity ->
-            !Has(KEEP) -> False
-            (kingdom_sanity_kingdom_order & !has_kingdom_sanity_items_to_reach_order) -> False
-            (!kingdom_sanity_kingdom_order & !HasGroupUnique("OrderedKingdoms") -> False
-            
-        !A | (B & C & D) | (B & E & !C)
-        '''
 
         satisfies_progressive_checks = (progressive_regions_is_off |
                                         Has("Progressive Region", count=max_kingdoms_per_run + 1))
