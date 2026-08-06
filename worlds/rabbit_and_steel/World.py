@@ -140,6 +140,16 @@ class RabbitAndSteelWorld(World):
         if self.options.checks_per_class.__contains__("_ALL"):
             self.options.checks_per_class.value = set(class_names) - set(self.options.exclude_class)
 
+        remaining_classes = (set(class_names) - set(self.options.exclude_class)) - self.options.checks_per_class.value
+        if len(remaining_classes) < self.options.random_class:
+            raise OptionError(f"Player {self.player_name} are randomly adding more classes than left available, "
+                              f"Randomly including: {self.options.random_class}, remaining classes: "
+                              f"{remaining_classes}")
+        for i in range(self.options.random_class):
+            new_class = self.random.choice(list(remaining_classes))
+            self.options.checks_per_class.value.add(new_class)
+            remaining_classes.remove(new_class)
+
         shared_classes = list(set(self.options.checks_per_class) & set(self.options.exclude_class))
         if len(shared_classes) != 0:
             raise OptionError(f"Player {self.player_name} is excluding classes, but expects to get checks with the "
@@ -174,7 +184,7 @@ class RabbitAndSteelWorld(World):
 
             if len(self.options.excluded_kingdoms.value & {PINNACLE}) == 1:
                 raise OptionError(f"Player {self.player_name} has excluded the " + PINNACLE + ", "
-                                  f"despite have Shira kills as a goal")
+                                                                                              f"despite have Shira kills as a goal")
 
         if (self.options.goal_condition == self.options.goal_condition.option_witch or
                 self.options.goal_condition == self.options.goal_condition.option_both):
@@ -183,7 +193,7 @@ class RabbitAndSteelWorld(World):
 
             if len(self.options.excluded_kingdoms.value & {POOL}) == 1:
                 raise OptionError(f"Player {self.player_name} has excluded the " + POOL + ", "
-                                  f"despite have Witch kills as a goal")
+                                                                                          f"despite have Witch kills as a goal")
 
         # Check to ensure we can enter the starting, penultimate, and boss hallway
         excluded_starting_hallways = self.options.excluded_kingdoms.value & {OUTSKIRTS, GEODE}

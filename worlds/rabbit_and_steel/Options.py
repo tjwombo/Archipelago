@@ -147,6 +147,17 @@ class ChecksPerClass(OptionSet):
     valid_keys = class_items.keys() | {"_ALL"}
 
 
+class RandomIncludeClass(Range):
+    """
+    How many classes to randomly add to checks per class.
+    Will not choose from classes that have been excluded, or already included.
+    """
+    display_name = "Random Include Classes For Checks Per Class"
+    range_start = 0
+    range_end = 14
+    default = 0
+
+
 class ItemSanity(Choice):
     """
     What is required to have an item appear in a non AP treasuresphere
@@ -259,6 +270,7 @@ class RabbitAndSteelOptions(PerGameCommonOptions):
     class_sanity: ClassSanity
     exclude_class: ExcludeClass
     checks_per_class: ChecksPerClass
+    random_class: RandomIncludeClass
     item_sanity: ItemSanity
     checks_per_item_in_chest: ChecksPerItemInChest
     upgrade_sanity: UpgradeSanity
@@ -286,8 +298,8 @@ option_groups = [
     ),
     OptionGroup(
         "Gameplay Options",
-        [ClassSanity, ExcludeClass, ChecksPerClass, ItemSanity, ChecksPerItemInChest, UpgradeSanity, PotionSanity,
-         ShopSanity],
+        [ClassSanity, ExcludeClass, ChecksPerClass, RandomIncludeClass, ItemSanity, ChecksPerItemInChest, UpgradeSanity,
+         PotionSanity, ShopSanity],
     ),
     OptionGroup(
         "Goal Options",
