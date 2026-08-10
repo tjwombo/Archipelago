@@ -11,7 +11,7 @@ from .Options import KingdomSanity, ProgressiveRegions, UseKingdomOrderWithKingd
 from .Constants import OUTSKIRTS, GEODE, NEST, ARSENAL, DARKHOUSE, STREETS, LAKESIDE, DEPTHS, \
     AURUM, SANCTUM, KEEP, HALLWAY, PINNACLE, POOL, WIZARD, ASSASSIN, HEAVYBLADE, DANCER, DRUID, \
     SPELLSWORD, SNIPER, BRUISER, DEFENDER, ANCIENT, HAMMERMAID, PYROMANCER, GRENADIER, SHADOW, \
-    KINGDOM_NAMES, EXTRA_KINGDOM_NAMES, SHIRA_DEFEAT_NAMES, WITCH_DEFEAT_NAMES
+    KINGDOM_NAMES, EXTRA_KINGDOM_NAMES, SHIRA_DEFEAT_NAMES, WITCH_DEFEAT_NAMES, CLASS_NAMES
 
 if TYPE_CHECKING:
     from .World import RabbitAndSteelWorld
@@ -226,7 +226,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
     # Manually setting class rules, as it doesn't seem to work otherwise
     if WIZARD in checks_per_class:
         # Set the remaining kingdoms rules
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             # Skip Moonlit Pinnacle and Reflecting Pool as it has special class rules
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
@@ -237,7 +237,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
     if ASSASSIN in checks_per_class:
         # Set the remaining kingdoms rules
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             # Skip Moonlit Pinnacle and Reflecting Pool as it has special class rules
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
@@ -248,7 +248,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
     if HEAVYBLADE in checks_per_class:
         # Set the remaining kingdoms rules
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             # Skip Moonlit Pinnacle and Reflecting Pool as it has special class rules
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
@@ -259,7 +259,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
     if DANCER in checks_per_class:
         # Set the remaining kingdoms rules
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             # Skip Moonlit Pinnacle and Reflecting Pool as it has special class rules
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
@@ -270,7 +270,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
     if DRUID in checks_per_class:
         # Set the remaining kingdoms rules
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             # Skip Moonlit Pinnacle and Reflecting Pool as it has special class rules
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
@@ -281,7 +281,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
     if SPELLSWORD in checks_per_class:
         # Set the remaining kingdoms rules
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             # Skip Moonlit Pinnacle and Reflecting Pool as it has special class rules
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
@@ -292,7 +292,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
     if SNIPER in checks_per_class:
         # Set the remaining kingdoms rules
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             # Skip Moonlit Pinnacle and Reflecting Pool as it has special class rules
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
@@ -303,7 +303,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
     if BRUISER in checks_per_class:
         # Set the remaining kingdoms rules
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             # Skip Moonlit Pinnacle and Reflecting Pool as it has special class rules
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
@@ -314,7 +314,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
     if DEFENDER in checks_per_class:
         # Set the remaining kingdoms rules
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             # Skip Moonlit Pinnacle and Reflecting Pool as it has special class rules
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
@@ -325,7 +325,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
     if ANCIENT in checks_per_class:
         # Set the remaining kingdoms rules
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             # Skip Moonlit Pinnacle and Reflecting Pool as it has special class rules
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
@@ -336,7 +336,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
     if HAMMERMAID in checks_per_class:
         # Set the remaining kingdoms rules
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             # Skip Moonlit Pinnacle and Reflecting Pool as it has special class rules
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
@@ -347,7 +347,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
     if PYROMANCER in checks_per_class:
         # Set the remaining kingdoms rules
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             # Skip Moonlit Pinnacle and Reflecting Pool as it has special class rules
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
@@ -358,7 +358,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
     if GRENADIER in checks_per_class:
         # Set the remaining kingdoms rules
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             # Skip Moonlit Pinnacle and Reflecting Pool as it has special class rules
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
@@ -369,7 +369,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
     if SHADOW in checks_per_class:
         # Set the remaining kingdoms rules
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             # Skip Moonlit Pinnacle and Reflecting Pool as it has special class rules
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
@@ -379,7 +379,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
                 world.set_rule(kingdom_to_class, class_sanity_is_off | Has(SHADOW))
 
     # Find the classes that will have checks in the last kingdom
-    class_checks_for_boss = [class_names for class_names in Items.class_names
+    class_checks_for_boss = [class_names for class_names in CLASS_NAMES
                              if class_names not in world.options.exclude_class.value]
     # TODO: Use below if finishing runs aren't a goal condition
     # class_checks_for_boss = world.options.checks_per_class
@@ -399,7 +399,7 @@ def set_all_location_rules(world: RabbitAndSteelWorld) -> None:
     # TODO: MAKE THESE EVENT ITEMS
     if world.options.goal_condition == world.options.goal_condition.option_shira or \
             world.options.goal_condition == world.options.goal_condition.option_both:
-        for class_name in Items.class_names:
+        for class_name in CLASS_NAMES:
             if class_name in world.options.exclude_class:
                 continue
             class_victory = world.get_location("Shira - " + class_name)
@@ -409,7 +409,7 @@ def set_all_location_rules(world: RabbitAndSteelWorld) -> None:
             class_victory.place_locked_item(class_item)
     if world.options.goal_condition == world.options.goal_condition.option_witch or \
             world.options.goal_condition == world.options.goal_condition.option_both:
-        for class_name in Items.class_names:
+        for class_name in CLASS_NAMES:
             if class_name in world.options.exclude_class:
                 continue
             class_victory = world.get_location("Witch - " + class_name)

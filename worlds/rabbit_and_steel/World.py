@@ -134,9 +134,6 @@ class RabbitAndSteelWorld(World):
             if buffer < 0:
                 raise OptionError(f"Player {self.player_name} can not reach all valid kingdoms: \n{kingdom_order}")
 
-        # TODO: IF RUN TYPE IS NOT CHAOTIC, ENSURE KINGDOM ORDER RESPECTS ORIGIN
-        print(kingdom_order)
-
     def generate_early(self) -> None:
         # Check if there are enough classes for the options
         if self.options.checks_per_class.__contains__("_ALL"):

@@ -5,7 +5,7 @@ from typing import TYPE_CHECKING
 from BaseClasses import Region
 from . import Items
 from .Options import RunType
-from .Constants import OUTSKIRTS, KEEP, PINNACLE, GEODE, HALLWAY, POOL
+from .Constants import OUTSKIRTS, KEEP, PINNACLE, GEODE, HALLWAY, POOL, KINGDOM_NAMES, EXTRA_KINGDOM_NAMES, CLASS_NAMES
 
 if TYPE_CHECKING:
     from .World import RabbitAndSteelWorld
@@ -21,14 +21,14 @@ def create_all_regions(world: RabbitAndSteelWorld) -> None:
     regions = [lobby]
 
     # Creates all kingdom regions
-    for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+    for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
         if kingdom_name not in world.options.excluded_kingdoms:
             region = Region(kingdom_name, world.player, world.multiworld)
             regions.append(region)
 
     # Creates the regions for the class checks minus the Moonlit Pinnacle and Reflecting Pool
     if world.options.checks_per_class:
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
 
@@ -38,7 +38,7 @@ def create_all_regions(world: RabbitAndSteelWorld) -> None:
                     regions.append(region)
 
     # Find the classes that will have checks in the last kingdom
-    class_checks_for_boss = [class_names for class_names in Items.class_names
+    class_checks_for_boss = [class_names for class_names in CLASS_NAMES
                              if class_names not in world.options.exclude_class.value]
     # TODO: Use below if finishing runs aren't a goal condition
     # class_checks_for_boss = world.options.checks_per_class
@@ -79,7 +79,7 @@ def connect_regions(world: RabbitAndSteelWorld) -> None:
         lobby.connect(crack_in_the_geode, world.origin_region_name + " to " + GEODE)
 
     # Connects the base regions minus the Moonlit Pinnacle to Kingdom Outskirts or Crack In The Geode if Chaotic
-    for kingdom_name in Items.kingdom_names:
+    for kingdom_name in KINGDOM_NAMES:
         if kingdom_name == OUTSKIRTS or kingdom_name == PINNACLE:
             continue
 
@@ -91,7 +91,7 @@ def connect_regions(world: RabbitAndSteelWorld) -> None:
                 crack_in_the_geode.connect(kingdom_region, GEODE + " to " + kingdom_name)
 
     # Connects the extra regions minus the Reflecting Pool to Crack In The Geode or Kingdom Outskirts if Chaotic
-    for kingdom_name in Items.extra_kingdom_names:
+    for kingdom_name in EXTRA_KINGDOM_NAMES:
         if kingdom_name == GEODE or kingdom_name == POOL:
             continue
 
@@ -127,7 +127,7 @@ def connect_regions(world: RabbitAndSteelWorld) -> None:
 
     # Connects the regions for the class checks for the regions Scholar's Nest - The Pale Keep to their parent region
     if world.options.checks_per_class:
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             if kingdom_name == PINNACLE or kingdom_name == POOL:
                 continue
 
@@ -139,7 +139,7 @@ def connect_regions(world: RabbitAndSteelWorld) -> None:
                     kingdom_region.connect(kingdom_class_region, kingdom_name + " - " + class_name)
 
     # Find the classes that will have checks in the last kingdom
-    class_checks_for_boss = [class_names for class_names in Items.class_names
+    class_checks_for_boss = [class_names for class_names in CLASS_NAMES
                              if class_names not in world.options.exclude_class.value]
     # TODO: Use below if finishing runs aren't a goal condition
     # class_checks_for_boss = world.options.checks_per_class
@@ -160,7 +160,7 @@ def connect_regions(world: RabbitAndSteelWorld) -> None:
     if world.options.shop_sanity == world.options.shop_sanity.option_global:
         shop_region = world.get_region("Shops")
 
-        for kingdom_name in (Items.kingdom_names + Items.extra_kingdom_names):
+        for kingdom_name in (KINGDOM_NAMES + EXTRA_KINGDOM_NAMES):
             if kingdom_name == OUTSKIRTS or kingdom_name == GEODE:
                 continue
 

@@ -5,8 +5,8 @@ from typing import TYPE_CHECKING
 from BaseClasses import Location
 from . import Items
 from .Constants import WIZARD, ASSASSIN, HEAVYBLADE, DANCER, DRUID, SPELLSWORD, SNIPER, BRUISER, \
-                DEFENDER, ANCIENT, HAMMERMAID, PYROMANCER, GRENADIER, SHADOW, OUTSKIRTS, NEST, ARSENAL, \
-                DARKHOUSE, STREETS, LAKESIDE, KEEP, PINNACLE, GEODE, DEPTHS, AURUM, SANCTUM, HALLWAY, POOL
+    DEFENDER, ANCIENT, HAMMERMAID, PYROMANCER, GRENADIER, SHADOW, OUTSKIRTS, NEST, ARSENAL, \
+    DARKHOUSE, STREETS, LAKESIDE, KEEP, PINNACLE, GEODE, DEPTHS, AURUM, SANCTUM, HALLWAY, POOL, CLASS_NAMES
 
 if TYPE_CHECKING:
     from .World import RabbitAndSteelWorld
@@ -78,7 +78,7 @@ def create_regular_locations(world: RabbitAndSteelWorld) -> None:
                     class_kingdom.add_locations(class_table[kingdom], RabbitAndSteelLocation)
 
     # Find the classes that will have checks in the last kingdom
-    class_checks_for_boss = Items.class_names
+    class_checks_for_boss = CLASS_NAMES
     # TODO: Use below if finishing runs aren't a goal condition
     # class_checks_for_boss = world.options.checks_per_class
 
