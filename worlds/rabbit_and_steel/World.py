@@ -12,6 +12,7 @@ client_version = 1
 
 
 class RabbitAndSteelWorld(World):
+    # TODO: Update description
     """
      Rabbit and Steel game description.
     """
@@ -45,6 +46,8 @@ class RabbitAndSteelWorld(World):
 
     starting_class_name = ""
     starting_hallway_name = ""
+
+    ut_can_gen_without_yaml = True
 
     def create_regions(self) -> None:
         Regions.create_and_connect_regions(self)
@@ -135,6 +138,25 @@ class RabbitAndSteelWorld(World):
                 raise OptionError(f"Player {self.player_name} can not reach all valid kingdoms: \n{kingdom_order}")
 
     def generate_early(self) -> None:
+        re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough", {})
+
+        # Use the data from UT if available
+        if re_gen_passthrough and self.game in re_gen_passthrough:
+            # Get the passed through slot data from the real generation
+            slot_data: dict[str, Any] = re_gen_passthrough[self.game]
+
+            # Set all your options here instead of getting them from the yaml
+            for key, value in slot_data.items():
+                if key == "starting_class_name":
+                    self.starting_class_name = value
+                elif key == "starting_hallway_name":
+                    self.starting_hallway_name = value
+                else:
+                    opt: RabbitAndSteelWorld.options = getattr(self.options, key, None)
+                    setattr(self.options, key, opt.from_any(value))
+
+            return
+
         # Check if there are enough classes for the options
         if self.options.checks_per_class.__contains__("_ALL"):
             self.options.checks_per_class.value = set(CLASS_NAMES) - set(self.options.exclude_class)
@@ -182,8 +204,8 @@ class RabbitAndSteelWorld(World):
                 raise OptionError(f"Player {self.player_name} needs to kill Shira more times than available classes")
 
             if len(self.options.excluded_kingdoms.value & {PINNACLE}) == 1:
-                raise OptionError(f"Player {self.player_name} has excluded the " + PINNACLE + ", "
-                                                                                              f"despite have Shira kills as a goal")
+                raise OptionError(f"Player {self.player_name} has excluded the " + PINNACLE +
+                                  ", despite have Shira kills as a goal")
 
         if (self.options.goal_condition == self.options.goal_condition.option_witch or
                 self.options.goal_condition == self.options.goal_condition.option_both):
@@ -191,8 +213,8 @@ class RabbitAndSteelWorld(World):
                 raise OptionError(f"Player {self.player_name} needs to kill Witch more times than available classes")
 
             if len(self.options.excluded_kingdoms.value & {POOL}) == 1:
-                raise OptionError(f"Player {self.player_name} has excluded the " + POOL + ", "
-                                                                                          f"despite have Witch kills as a goal")
+                raise OptionError(f"Player {self.player_name} has excluded the " + POOL +
+                                  ", despite have Witch kills as a goal")
 
         # Check to ensure we can enter the starting, penultimate, and boss hallway
         excluded_starting_hallways = self.options.excluded_kingdoms.value & {OUTSKIRTS, GEODE}
@@ -248,8 +270,14 @@ class RabbitAndSteelWorld(World):
                 kingdom_order[kingdom] = -1
 
     def fill_slot_data(self) -> Dict[str, Any]:
-        return self.options.as_dict(
-            "kingdom_sanity", "run_type", "max_kingdoms_per_run", "progressive_regions", "excluded_kingdoms",
-            "kingdom_sanity_kingdom_order", "kingdom_order", "class_sanity", "checks_per_class", "item_sanity",
-            "checks_per_item_in_chest", "upgrade_sanity", "potion_sanity", "goal_condition", "shira_defeats",
-            "witch_defeats", "shop_sanity")
+        options = self.options.as_dict(
+                "kingdom_sanity", "run_type", "max_kingdoms_per_run", "progressive_regions", "excluded_kingdoms",
+                "kingdom_sanity_kingdom_order", "kingdom_order", "class_sanity", "checks_per_class", "item_sanity",
+                "checks_per_item_in_chest", "upgrade_sanity", "potion_sanity", "goal_condition", "shira_defeats",
+                "witch_defeats", "shop_sanity")
+
+        # Data for UT
+        options["starting_class_name"] = self.starting_class_name
+        options["starting_hallway_name"] = self.starting_hallway_name
+
+        return options

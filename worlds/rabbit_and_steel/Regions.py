@@ -3,7 +3,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from BaseClasses import Region
-from . import Items
 from .Options import RunType
 from .Constants import OUTSKIRTS, KEEP, PINNACLE, GEODE, HALLWAY, POOL, KINGDOM_NAMES, EXTRA_KINGDOM_NAMES, CLASS_NAMES
 
