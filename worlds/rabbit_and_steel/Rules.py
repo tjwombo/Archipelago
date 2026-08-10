@@ -11,7 +11,7 @@ from .Options import KingdomSanity, ProgressiveRegions, UseKingdomOrderWithKingd
 from .Constants import OUTSKIRTS, GEODE, NEST, ARSENAL, DARKHOUSE, STREETS, LAKESIDE, DEPTHS, \
     AURUM, SANCTUM, KEEP, HALLWAY, PINNACLE, POOL, WIZARD, ASSASSIN, HEAVYBLADE, DANCER, DRUID, \
     SPELLSWORD, SNIPER, BRUISER, DEFENDER, ANCIENT, HAMMERMAID, PYROMANCER, GRENADIER, SHADOW, \
-    kingdom_names, extra_kingdom_names, shira_defeat_names, witch_defeat_names
+    KINGDOM_NAMES, EXTRA_KINGDOM_NAMES, SHIRA_DEFEAT_NAMES, WITCH_DEFEAT_NAMES
 
 if TYPE_CHECKING:
     from .World import RabbitAndSteelWorld
@@ -52,9 +52,9 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
         rule = False_()
         for kingdom in [k for k, v in kingdom_order.items() if v == our_order]:
             if run_type != world.options.run_type.option_combined:
-                if kingdom in kingdom_names and our_kingdom not in kingdom_names:
+                if kingdom in KINGDOM_NAMES and our_kingdom not in KINGDOM_NAMES:
                     continue
-                elif kingdom in extra_kingdom_names and our_kingdom not in extra_kingdom_names:
+                elif kingdom in EXTRA_KINGDOM_NAMES and our_kingdom not in EXTRA_KINGDOM_NAMES:
                     continue
             rule = rule | CanReachRegion(kingdom)
         return rule
@@ -427,16 +427,16 @@ def set_completion_condition(world: RabbitAndSteelWorld) -> None:
     if goal == world.options.goal_condition.option_shira:
         shira_defeats = world.options.shira_defeats.value
 
-        world.set_rule(victory, HasFromListUnique(*shira_defeat_names, count=shira_defeats))
+        world.set_rule(victory, HasFromListUnique(*SHIRA_DEFEAT_NAMES, count=shira_defeats))
     elif goal == world.options.goal_condition.option_witch:
         witch_defeats = world.options.witch_defeats.value
 
-        world.set_rule(victory, HasFromListUnique(*witch_defeat_names, count=witch_defeats))
+        world.set_rule(victory, HasFromListUnique(*WITCH_DEFEAT_NAMES, count=witch_defeats))
     elif goal == world.options.goal_condition.option_both:
         shira_defeats = world.options.shira_defeats.value
         witch_defeats = world.options.witch_defeats.value
 
-        world.set_rule(victory, HasFromListUnique(*shira_defeat_names, count=shira_defeats) &
-                       HasFromListUnique(*witch_defeat_names, count=witch_defeats))
+        world.set_rule(victory, HasFromListUnique(*SHIRA_DEFEAT_NAMES, count=shira_defeats) &
+                       HasFromListUnique(*WITCH_DEFEAT_NAMES, count=witch_defeats))
 
     world.set_completion_rule(Has("Victory"))

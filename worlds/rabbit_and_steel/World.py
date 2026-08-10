@@ -4,8 +4,9 @@ from Options import OptionError
 from worlds.AutoWorld import World
 
 from . import Items, Locations, Options, Regions, Rules, Web_world
-from .Constants import OUTSKIRTS, KEEP, PINNACLE, GEODE, HALLWAY, POOL, class_names, kingdom_names, \
-    extra_kingdom_names, kingdom_order_kingdom_names, extra_kingdom_order_kingdom_names, all_kingdom_order_kingdom_names
+from .Constants import OUTSKIRTS, KEEP, PINNACLE, GEODE, HALLWAY, POOL, CLASS_NAMES, KINGDOM_NAMES, \
+    EXTRA_KINGDOM_NAMES, KINGDOM_ORDER_KINGDOM_NAMES, EXTRA_KINGDOM_ORDER_KINGDOM_NAMES, \
+    ALL_KINGDOM_ORDER_KINGDOM_NAMES, SHIRA_DEFEAT_NAMES, WITCH_DEFEAT_NAMES
 
 client_version = 1
 
@@ -30,15 +31,16 @@ class RabbitAndSteelWorld(World):
     origin_region_name = "Lobby"
 
     item_name_groups = {
-        "Kingdoms": kingdom_names,
-        "OrderedKingdoms": all_kingdom_order_kingdom_names,
-        "BaseKingdoms": kingdom_order_kingdom_names,
-        "ExtraKingdoms": extra_kingdom_order_kingdom_names,
-        "Classes": Items.class_names,
+        "Kingdoms": KINGDOM_NAMES,
+        "OrderedKingdoms": ALL_KINGDOM_ORDER_KINGDOM_NAMES,
+        "BaseKingdoms": KINGDOM_ORDER_KINGDOM_NAMES,
+        "ExtraKingdoms": EXTRA_KINGDOM_ORDER_KINGDOM_NAMES,
+        "Classes": CLASS_NAMES,
         "Items": Items.itemset_names + Items.specific_items_names,
         "Upgrades": Items.upgrade_names + Items.specific_upgrade_names,
         "Potions": Items.potion_names,
-        "ShiraVictory": Items.shira_defeat_names,
+        "ShiraVictory": SHIRA_DEFEAT_NAMES,
+        "WitchVictory": WITCH_DEFEAT_NAMES
     }
 
     starting_class_name = ""
@@ -69,14 +71,14 @@ class RabbitAndSteelWorld(World):
         run_type = self.options.run_type.value
 
         if run_type == self.options.run_type.option_combined:
-            self.assign_kingdom_order(all_kingdom_order_kingdom_names)
+            self.assign_kingdom_order(ALL_KINGDOM_ORDER_KINGDOM_NAMES)
         elif run_type == self.options.run_type.option_kingdom:
-            self.assign_kingdom_order(kingdom_order_kingdom_names)
+            self.assign_kingdom_order(KINGDOM_ORDER_KINGDOM_NAMES)
         elif run_type == self.options.run_type.option_extra:
-            self.assign_kingdom_order(extra_kingdom_order_kingdom_names)
+            self.assign_kingdom_order(EXTRA_KINGDOM_ORDER_KINGDOM_NAMES)
         elif run_type == self.options.run_type.option_either:
-            self.assign_kingdom_order(kingdom_order_kingdom_names)
-            self.assign_kingdom_order(extra_kingdom_order_kingdom_names)
+            self.assign_kingdom_order(KINGDOM_ORDER_KINGDOM_NAMES)
+            self.assign_kingdom_order(EXTRA_KINGDOM_ORDER_KINGDOM_NAMES)
 
     def assign_kingdom_order(self, kingdoms_to_set: list[str]) -> None:
         max_kingdoms_per_run = self.options.max_kingdoms_per_run.value
@@ -138,9 +140,9 @@ class RabbitAndSteelWorld(World):
     def generate_early(self) -> None:
         # Check if there are enough classes for the options
         if self.options.checks_per_class.__contains__("_ALL"):
-            self.options.checks_per_class.value = set(class_names) - set(self.options.exclude_class)
+            self.options.checks_per_class.value = set(CLASS_NAMES) - set(self.options.exclude_class)
 
-        remaining_classes = (set(class_names) - set(self.options.exclude_class)) - self.options.checks_per_class.value
+        remaining_classes = (set(CLASS_NAMES) - set(self.options.exclude_class)) - self.options.checks_per_class.value
         if len(remaining_classes) < self.options.random_class:
             raise OptionError(f"Player {self.player_name} are randomly adding more classes than left available, "
                               f"Randomly including: {self.options.random_class}, remaining classes: "
@@ -155,18 +157,18 @@ class RabbitAndSteelWorld(World):
             raise OptionError(f"Player {self.player_name} is excluding classes, but expects to get checks with the "
                               f"class: {shared_classes}")
 
-        if len(self.options.exclude_class.value) == len(class_names):
+        if len(self.options.exclude_class.value) == len(CLASS_NAMES):
             raise OptionError(f"Player {self.player_name} is excluding all classes, but at least one is needed to play")
 
         # Move unused kingdoms to excluded kingdoms
         run_type = self.options.run_type.value
         if run_type == self.options.run_type.option_extra:
-            self.options.excluded_kingdoms.value = self.options.excluded_kingdoms.value | set(kingdom_names)
+            self.options.excluded_kingdoms.value = self.options.excluded_kingdoms.value | set(KINGDOM_NAMES)
         elif run_type == self.options.run_type.option_kingdom:
-            self.options.excluded_kingdoms.value = self.options.excluded_kingdoms.value | set(extra_kingdom_names)
+            self.options.excluded_kingdoms.value = self.options.excluded_kingdoms.value | set(EXTRA_KINGDOM_NAMES)
 
-        excluded_base_kingdoms = self.options.excluded_kingdoms.value & set(kingdom_names)
-        excluded_extra_kingdoms = self.options.excluded_kingdoms.value & set(extra_kingdom_names)
+        excluded_base_kingdoms = self.options.excluded_kingdoms.value & set(KINGDOM_NAMES)
+        excluded_extra_kingdoms = self.options.excluded_kingdoms.value & set(EXTRA_KINGDOM_NAMES)
         if run_type == self.options.run_type.option_extra or run_type == self.options.run_type.option_either:
             if self.options.max_kingdoms_per_run.value > 3 - len(excluded_extra_kingdoms):
                 raise OptionError(f"Player {self.player_name} needs to visit more extra kingdoms than possible."
@@ -179,7 +181,7 @@ class RabbitAndSteelWorld(World):
         # Check to ensure each boss can be killed enough times
         if (self.options.goal_condition == self.options.goal_condition.option_shira or
                 self.options.goal_condition == self.options.goal_condition.option_both):
-            if self.options.shira_defeats.value > len(class_names) - len(self.options.exclude_class.value):
+            if self.options.shira_defeats.value > len(CLASS_NAMES) - len(self.options.exclude_class.value):
                 raise OptionError(f"Player {self.player_name} needs to kill Shira more times than available classes")
 
             if len(self.options.excluded_kingdoms.value & {PINNACLE}) == 1:
@@ -188,7 +190,7 @@ class RabbitAndSteelWorld(World):
 
         if (self.options.goal_condition == self.options.goal_condition.option_witch or
                 self.options.goal_condition == self.options.goal_condition.option_both):
-            if self.options.witch_defeats.value > len(class_names) - len(self.options.exclude_class.value):
+            if self.options.witch_defeats.value > len(CLASS_NAMES) - len(self.options.exclude_class.value):
                 raise OptionError(f"Player {self.player_name} needs to kill Witch more times than available classes")
 
             if len(self.options.excluded_kingdoms.value & {POOL}) == 1:
@@ -230,7 +232,7 @@ class RabbitAndSteelWorld(World):
 
         # Assign the starting class
         if self.options.class_sanity:
-            self.starting_class_name = self.random.choice(tuple(set(class_names) - set(self.options.exclude_class)))
+            self.starting_class_name = self.random.choice(tuple(set(CLASS_NAMES) - set(self.options.exclude_class)))
             self.multiworld.push_precollected(self.create_item_with_type(self.starting_class_name, "Classes"))
 
         # Assign the starting hallway

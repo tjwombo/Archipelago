@@ -3,7 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from BaseClasses import Item, ItemClassification
-from .Constants import kingdom_names, class_names, extra_kingdom_names, shira_defeat_names, witch_defeat_names
+from .Constants import KINGDOM_NAMES, CLASS_NAMES, EXTRA_KINGDOM_NAMES, SHIRA_DEFEAT_NAMES, WITCH_DEFEAT_NAMES
 
 if TYPE_CHECKING:
     from .World import RabbitAndSteelWorld
@@ -144,17 +144,17 @@ def create_all_items(world: RabbitAndSteelWorld) -> None:
 item_id = 1
 
 kingdom_items = {}
-for item in kingdom_names:
+for item in KINGDOM_NAMES:
     kingdom_items[item] = item_id
     item_id += 1
 
 extra_kingdom_items = {}
-for item in extra_kingdom_names:
+for item in EXTRA_KINGDOM_NAMES:
     extra_kingdom_items[item] = item_id
     item_id += 1
 
 class_items = {}
-for item in class_names:
+for item in CLASS_NAMES:
     class_items[item] = item_id
     item_id += 1
 
@@ -261,12 +261,12 @@ for item in potion_names:
     item_id += 1
 
 shira_defeat_items = {}
-for item in shira_defeat_names:
+for item in SHIRA_DEFEAT_NAMES:
     shira_defeat_items[item] = item_id
     item_id += 1
 
 witch_defeat_items = {}
-for item in witch_defeat_names:
+for item in WITCH_DEFEAT_NAMES:
     witch_defeat_items[item] = item_id
     item_id += 1
 
