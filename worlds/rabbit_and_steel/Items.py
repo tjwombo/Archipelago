@@ -222,7 +222,7 @@ specific_items_names = ["Raven Grimoire", "Blackwing Staff", "Curse Talon", "Dar
                         "Springloaded Scythe", "Hidden Blade", "Sharpedged Shield", "Pointed Ring",
                         "Crown Of Swords", "Bladed Cload", "Greatsword Pendant", "Rusted Greatsword", "Sand Shovel",
                         "Saltwater Staff", "Large Umbrella", "Onepiece Swimsuit", "Straw Hat", "Large Anchor",
-                        "Beach Sandals", "Strongmans Bard", "Spinning Chakram", "Ribboned Staff", "Trick Shield",
+                        "Beach Sandals", "Strongmans Bar", "Spinning Chakram", "Ribboned Staff", "Trick Shield",
                         "Rosered Leotard", "Jesters Hat", "Rainbow Cape", "Performers Shoes", "Iron Pickaxe",
                         "Dynamite Staff", "Fossil Dagger", "Drill Shield", "Canary Charm", "Pyrite Earrings",
                         "Cavers Cloak", "Miners Headlamp", "Tiny Fork", "Stirring Spoon", "Fanciful Book",

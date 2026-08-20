@@ -24,16 +24,16 @@ def set_all_rules(world: RabbitAndSteelWorld) -> None:
 
 
 def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
-    kingdom_sanity_is_off = OptionFilter(KingdomSanity, False)
+    kingdom_sanity_is_off = OptionFilter(KingdomSanity, KingdomSanity.option_false)
     run_type = world.options.run_type
-    progressive_regions_is_off = OptionFilter(ProgressiveRegions, False)
+    progressive_regions_is_off = OptionFilter(ProgressiveRegions, ProgressiveRegions.option_false)
     excluded_kingdoms = world.options.excluded_kingdoms
-    kingdom_sanity_kingdom_order = OptionFilter(UseKingdomOrderWithKingdomSanity, True)
-    kingdom_sanity_kingdom_order_is_off = OptionFilter(UseKingdomOrderWithKingdomSanity, False)
+    kingdom_sanity_kingdom_order = OptionFilter(UseKingdomOrderWithKingdomSanity, UseKingdomOrderWithKingdomSanity.option_true)
+    kingdom_sanity_kingdom_order_is_off = OptionFilter(UseKingdomOrderWithKingdomSanity, UseKingdomOrderWithKingdomSanity.option_false)
     kingdom_order = world.options.kingdom_order
     max_kingdoms_per_run = world.options.max_kingdoms_per_run
     checks_per_class = world.options.checks_per_class
-    class_sanity_is_off = OptionFilter(ClassSanity, False)
+    class_sanity_is_off = OptionFilter(ClassSanity, ClassSanity.option_false)
 
     # Require a class to be unlocked if playing on class sanity
     if OUTSKIRTS not in world.options.excluded_kingdoms:
@@ -65,7 +65,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
                                           | kingdom_sanity_kingdom_order_is_off)))
 
         regions_required = 1
-        if kingdom_sanity_is_off and kingdom_sanity_kingdom_order:
+        if kingdom_sanity_is_off == 1 and kingdom_sanity_kingdom_order == 1:
             regions_required = kingdom_order[kingdom]
 
         regions_check = progressive_regions_is_off | Has("Progressive Region", count=regions_required)

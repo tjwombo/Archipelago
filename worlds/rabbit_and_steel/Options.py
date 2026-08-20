@@ -177,9 +177,9 @@ class ItemSanity(Choice):
 
 class ChecksPerItemInChest(Toggle):
     """
-    Each item in a chest is an archipelago item.
-    Shuffles treasure spheres into the item pool.
-    Does not add one per class if 'Checks Per Class' is on
+    Each item in a standard chest is an archipelago item.
+    Shuffles treasurespheres into the item pool, which will contain the non AP items.
+    Does not add one check per class if 'Checks Per Class' is on
     """
     display_name = "Checks Per Item In Chest"
 
