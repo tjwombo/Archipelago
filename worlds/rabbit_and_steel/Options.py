@@ -87,7 +87,7 @@ class KingdomOrder(OptionCounter):
     With Kingdom Sanity, you must be able to visit at least one kingdom in each previous order
     "0" will randomly assign it to an unfilled position if there are no valid positions unfilled,
     it will place it in the last position that doesn't have more than the others.
-    Excluded kingdoms are not considered.
+    Excluded kingdoms are not considered, but must still be present.
     You will be able to choose any kingdom as your first kingdom in a route if logically accessible.
     Throws an error if the number of 'valid' kingdoms is less than 'All Kingdoms'
     """

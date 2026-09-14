@@ -92,6 +92,11 @@ class RabbitAndSteelWorld(World):
                           order == 0 and kingdom not in excluded_kingdoms and kingdom in kingdoms_to_set]
         order_amounts = dict.fromkeys([order for order in range(1, max_kingdoms_per_run + 1)], 0)
 
+        missing_orders = kingdoms_to_set - kingdom_order.keys()
+        if len(missing_orders) > 0:
+            raise OptionError(f"Player {self.player_name} kingdom order option does not include all the kingdoms for "
+                              f"this run type. They are missing: {missing_orders}")
+
         # Ensure we have enough valid kingdoms and assign the kingdoms that have a specific value
         valid_placements = 0
         for (kingdom, value) in kingdom_order.items():
