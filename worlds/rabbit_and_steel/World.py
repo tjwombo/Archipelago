@@ -201,6 +201,10 @@ class RabbitAndSteelWorld(World):
             if self.options.max_kingdoms_per_run.value > 5 - len(excluded_base_kingdoms):
                 raise OptionError(f"Player {self.player_name} needs to visit more base kingdoms than possible."
                                   f" Set run type to chaos if you want to visit base and extra kingdoms in the same run")
+        elif run_type == self.options.run_type.option_combined:
+            if self.options.max_kingdoms_per_run.value > 8 - len(excluded_extra_kingdoms) - len(excluded_base_kingdoms):
+                raise OptionError(f"Player {self.player_name} needs to visit more kingdoms than possible."
+                                  f" Exclude less kingdoms or increase max kingdoms per run")
 
         # Check to ensure each boss can be killed enough times
         if (self.options.goal_condition == self.options.goal_condition.option_shira or
@@ -281,7 +285,7 @@ class RabbitAndSteelWorld(World):
                 "checks_per_item_in_chest", "upgrade_sanity", "potion_sanity", "goal_condition", "shira_defeats",
                 "witch_defeats", "shop_sanity")
 
-        # Data for UT
+        # Data for yaml-less UT
         options["starting_class_name"] = self.starting_class_name
         options["starting_hallway_name"] = self.starting_hallway_name
 

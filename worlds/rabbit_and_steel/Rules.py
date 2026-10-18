@@ -65,7 +65,7 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
                                           | kingdom_sanity_kingdom_order_is_off)))
 
         regions_required = 1
-        if kingdom_sanity_is_off == 1 and kingdom_sanity_kingdom_order == 1:
+        if kingdom_sanity_is_off or kingdom_sanity_kingdom_order:
             regions_required = kingdom_order[kingdom]
 
         regions_check = progressive_regions_is_off | Has("Progressive Region", count=regions_required)
