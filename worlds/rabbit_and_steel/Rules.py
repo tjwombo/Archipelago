@@ -24,27 +24,30 @@ def set_all_rules(world: RabbitAndSteelWorld) -> None:
 
 
 def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
-    kingdom_sanity_is_off = OptionFilter(KingdomSanity, KingdomSanity.option_false)
+    check_when_kingdom_sanity_is_on = OptionFilter(KingdomSanity, KingdomSanity.option_true)
     run_type = world.options.run_type
-    progressive_regions_is_off = OptionFilter(ProgressiveRegions, ProgressiveRegions.option_false)
+    check_when_progressive_regions_is_on = OptionFilter(ProgressiveRegions, ProgressiveRegions.option_true)
     excluded_kingdoms = world.options.excluded_kingdoms
-    kingdom_sanity_kingdom_order = OptionFilter(UseKingdomOrderWithKingdomSanity, UseKingdomOrderWithKingdomSanity.option_true)
-    kingdom_sanity_kingdom_order_is_off = OptionFilter(UseKingdomOrderWithKingdomSanity, UseKingdomOrderWithKingdomSanity.option_false)
+    check_when_kingdom_sanity_kingdom_order_is_on = OptionFilter(UseKingdomOrderWithKingdomSanity,
+                                                                 UseKingdomOrderWithKingdomSanity.option_true)
     kingdom_order = world.options.kingdom_order
     max_kingdoms_per_run = world.options.max_kingdoms_per_run
     checks_per_class = world.options.checks_per_class
-    class_sanity_is_off = OptionFilter(ClassSanity, ClassSanity.option_false)
+    check_when_class_sanity_is_on = OptionFilter(ClassSanity, ClassSanity.option_true)
 
     # Require a class to be unlocked if playing on class sanity
     if OUTSKIRTS not in world.options.excluded_kingdoms:
         lobby_to_outskirts = world.get_entrance(world.origin_region_name + " to " + OUTSKIRTS)
-        world.set_rule(lobby_to_outskirts, (kingdom_sanity_is_off | Has(OUTSKIRTS)) &
-                       (class_sanity_is_off | HasGroup("Classes")))
+        world.set_rule(lobby_to_outskirts,
+                       # Use the rule, when option is true, otherwise use filtered resolution
+                       (Has(OUTSKIRTS, options=[check_when_kingdom_sanity_is_on], filtered_resolution=True)) &
+                       (HasGroup("Classes", options=[check_when_class_sanity_is_on], filtered_resolution=True)))
 
     if GEODE not in world.options.excluded_kingdoms:
         lobby_to_geode = world.get_entrance(world.origin_region_name + " to " + GEODE)
-        world.set_rule(lobby_to_geode, (kingdom_sanity_is_off | Has(GEODE)) &
-                       (class_sanity_is_off | HasGroup("Classes")))
+        world.set_rule(lobby_to_geode,
+                       (Has(GEODE, options=[check_when_kingdom_sanity_is_on], filtered_resolution=True)) &
+                       (HasGroup("Classes", options=[check_when_class_sanity_is_on], filtered_resolution=True)))
 
     def has_kingdom_sanity_items_to_reach_order(our_order: int, our_kingdom: str) -> Rule:
         if our_order == 0:
@@ -60,15 +63,22 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
         return rule
 
     def set_kingdoms_connection_rules(kingdom: str) -> Rule:
-        kingdom_check = (kingdom_sanity_is_off |
-                         (Has(kingdom) & (has_kingdom_sanity_items_to_reach_order(kingdom_order[kingdom] - 1, kingdom)
-                                          | kingdom_sanity_kingdom_order_is_off)))
+        # Returns true when has_kingdom_sanity_items_to_reach_order is true or kingdom sanity kingdom order is off
+        kingdom_order_check = has_kingdom_sanity_items_to_reach_order(kingdom_order[kingdom] - 1, kingdom)
+        kingdom_order_check.options = [check_when_kingdom_sanity_kingdom_order_is_on]
+        kingdom_order_check.filtered_resolution = True
+
+        # Returns true when we have the kingdom and pass the kingdom order check or kingdom sanity is off
+        kingdom_check = (Has(kingdom) & kingdom_order_check)
+        kingdom_check.options = [check_when_kingdom_sanity_is_on]
+        kingdom_check.filtered_resolution = True
 
         regions_required = 1
-        if kingdom_sanity_is_off or kingdom_sanity_kingdom_order:
+        if world.options.kingdom_sanity == world.options.kingdom_sanity.option_false or \
+                world.options.kingdom_sanity_kingdom_order == world.options.kingdom_sanity_kingdom_order.option_true:
             regions_required = kingdom_order[kingdom]
 
-        regions_check = progressive_regions_is_off | Has("Progressive Region", count=regions_required)
+        regions_check = Has("Progressive Region", count=regions_required, options=[check_when_progressive_regions_is_on], filtered_resolution=True)
 
         return kingdom_check & regions_check
 
@@ -171,13 +181,39 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
         elif kingdom == HALLWAY:
             satisfies_run_type = HasGroupUnique("ExtraKingdoms", max_kingdoms_per_run + 0)
 
-        satisfies_kingdom_checks = (kingdom_sanity_is_off |
-                                    (Has(kingdom) & kingdom_sanity_kingdom_order &
-                                     has_kingdom_sanity_items_to_reach_order(max_kingdoms_per_run + 0, kingdom)) |
-                                    (Has(kingdom) & kingdom_sanity_kingdom_order_is_off & satisfies_run_type))
+        '''
+        satisfies kingdom check if:
+            kingdom sanity is off or
+            we have the kingdom and
+                kingdom sanity kingdom order is on and
+                we can reach the kingdom order
+            or we have the kingdom and
+                kingdom sanity kingdom order is off and
+                its the right run type
+                
+        simplified:
+            kingdom sanity is off or
+            we have the kingdom and
+                we can reach the kingdom order if kingdom sanity kingdom order is on or
+                its the right run type if kingdom sanity kingdom order is off
+        
+        '''
 
-        satisfies_progressive_checks = (progressive_regions_is_off |
-                                        Has("Progressive Region", count=max_kingdoms_per_run + 1))
+        # Returns true when we satisfy the run type or fulfill the kingdom order check depending on kingdom order option
+        satisfies_kingdom_sanity_kingdom_order = satisfies_run_type
+        if world.options.kingdom_sanity_kingdom_order == world.options.kingdom_sanity_kingdom_order.option_true:
+            satisfies_kingdom_sanity_kingdom_order = has_kingdom_sanity_items_to_reach_order(max_kingdoms_per_run + 0,
+                                                                                             kingdom)
+
+        # Returns true when we have the kingdom and pass the kingdom order check or kingdom sanity is off
+        satisfies_kingdom_checks = (Has(kingdom) & satisfies_kingdom_sanity_kingdom_order)
+        satisfies_kingdom_checks.options = [check_when_kingdom_sanity_is_on]
+        satisfies_kingdom_checks.filtered_resolution = True
+
+        satisfies_progressive_checks = Has("Progressive Region",
+                                           count=max_kingdoms_per_run + 1,
+                                           options=[check_when_progressive_regions_is_on],
+                                           filtered_resolution=True)
 
         return satisfies_kingdom_checks & satisfies_progressive_checks
 
@@ -208,9 +244,12 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
             keep_to_pool = world.get_entrance(KEEP + " to " + POOL)
 
     def set_ultimate_rules(kingdom) -> Rule:
-        kingdom_check = kingdom_sanity_is_off | Has(kingdom)
+        kingdom_check = Has(kingdom, options=[check_when_kingdom_sanity_is_on], filtered_resolution=True)
 
-        progressive_check = progressive_regions_is_off | Has("Progressive Region", count=max_kingdoms_per_run + 2)
+        progressive_check = Has("Progressive Region",
+                                count=max_kingdoms_per_run + 2,
+                                options=[check_when_progressive_regions_is_on],
+                                filtered_resolution=True)
 
         return kingdom_check & progressive_check
 
@@ -233,7 +272,9 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
             if kingdom_name not in excluded_kingdoms:
                 kingdom_to_class = world.get_entrance(kingdom_name + " - " + WIZARD)
-                world.set_rule(kingdom_to_class, class_sanity_is_off | Has(WIZARD))
+                world.set_rule(kingdom_to_class, Has(WIZARD,
+                                                     options=[check_when_class_sanity_is_on],
+                                                     filtered_resolution=True))
 
     if ASSASSIN in checks_per_class:
         # Set the remaining kingdoms rules
@@ -244,7 +285,9 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
             if kingdom_name not in excluded_kingdoms:
                 kingdom_to_class = world.get_entrance(kingdom_name + " - " + ASSASSIN)
-                world.set_rule(kingdom_to_class, class_sanity_is_off | Has(ASSASSIN))
+                world.set_rule(kingdom_to_class, Has(ASSASSIN,
+                                                     options=[check_when_class_sanity_is_on],
+                                                     filtered_resolution=True))
 
     if HEAVYBLADE in checks_per_class:
         # Set the remaining kingdoms rules
@@ -255,7 +298,9 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
             if kingdom_name not in excluded_kingdoms:
                 kingdom_to_class = world.get_entrance(kingdom_name + " - " + HEAVYBLADE)
-                world.set_rule(kingdom_to_class, class_sanity_is_off | Has(HEAVYBLADE))
+                world.set_rule(kingdom_to_class, Has(HEAVYBLADE,
+                                                     options=[check_when_class_sanity_is_on],
+                                                     filtered_resolution=True))
 
     if DANCER in checks_per_class:
         # Set the remaining kingdoms rules
@@ -266,7 +311,9 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
             if kingdom_name not in excluded_kingdoms:
                 kingdom_to_class = world.get_entrance(kingdom_name + " - " + DANCER)
-                world.set_rule(kingdom_to_class, class_sanity_is_off | Has(DANCER))
+                world.set_rule(kingdom_to_class, Has(DANCER,
+                                                     options=[check_when_class_sanity_is_on],
+                                                     filtered_resolution=True))
 
     if DRUID in checks_per_class:
         # Set the remaining kingdoms rules
@@ -277,7 +324,9 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
             if kingdom_name not in excluded_kingdoms:
                 kingdom_to_class = world.get_entrance(kingdom_name + " - " + DRUID)
-                world.set_rule(kingdom_to_class, class_sanity_is_off | Has(DRUID))
+                world.set_rule(kingdom_to_class, Has(DRUID,
+                                                     options=[check_when_class_sanity_is_on],
+                                                     filtered_resolution=True))
 
     if SPELLSWORD in checks_per_class:
         # Set the remaining kingdoms rules
@@ -288,7 +337,9 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
             if kingdom_name not in excluded_kingdoms:
                 kingdom_to_class = world.get_entrance(kingdom_name + " - " + SPELLSWORD)
-                world.set_rule(kingdom_to_class, class_sanity_is_off | Has(SPELLSWORD))
+                world.set_rule(kingdom_to_class, Has(SPELLSWORD,
+                                                     options=[check_when_class_sanity_is_on],
+                                                     filtered_resolution=True))
 
     if SNIPER in checks_per_class:
         # Set the remaining kingdoms rules
@@ -299,7 +350,9 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
             if kingdom_name not in excluded_kingdoms:
                 kingdom_to_class = world.get_entrance(kingdom_name + " - " + SNIPER)
-                world.set_rule(kingdom_to_class, class_sanity_is_off | Has(SNIPER))
+                world.set_rule(kingdom_to_class, Has(SNIPER,
+                                                     options=[check_when_class_sanity_is_on],
+                                                     filtered_resolution=True))
 
     if BRUISER in checks_per_class:
         # Set the remaining kingdoms rules
@@ -310,7 +363,9 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
             if kingdom_name not in excluded_kingdoms:
                 kingdom_to_class = world.get_entrance(kingdom_name + " - " + BRUISER)
-                world.set_rule(kingdom_to_class, class_sanity_is_off | Has(BRUISER))
+                world.set_rule(kingdom_to_class, Has(BRUISER,
+                                                     options=[check_when_class_sanity_is_on],
+                                                     filtered_resolution=True))
 
     if DEFENDER in checks_per_class:
         # Set the remaining kingdoms rules
@@ -321,7 +376,9 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
             if kingdom_name not in excluded_kingdoms:
                 kingdom_to_class = world.get_entrance(kingdom_name + " - " + DEFENDER)
-                world.set_rule(kingdom_to_class, class_sanity_is_off | Has(DEFENDER))
+                world.set_rule(kingdom_to_class, Has(DEFENDER,
+                                                     options=[check_when_class_sanity_is_on],
+                                                     filtered_resolution=True))
 
     if ANCIENT in checks_per_class:
         # Set the remaining kingdoms rules
@@ -332,7 +389,9 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
             if kingdom_name not in excluded_kingdoms:
                 kingdom_to_class = world.get_entrance(kingdom_name + " - " + ANCIENT)
-                world.set_rule(kingdom_to_class, class_sanity_is_off | Has(ANCIENT))
+                world.set_rule(kingdom_to_class, Has(ANCIENT,
+                                                     options=[check_when_class_sanity_is_on],
+                                                     filtered_resolution=True))
 
     if HAMMERMAID in checks_per_class:
         # Set the remaining kingdoms rules
@@ -343,7 +402,9 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
             if kingdom_name not in excluded_kingdoms:
                 kingdom_to_class = world.get_entrance(kingdom_name + " - " + HAMMERMAID)
-                world.set_rule(kingdom_to_class, class_sanity_is_off | Has(HAMMERMAID))
+                world.set_rule(kingdom_to_class, Has(HAMMERMAID,
+                                                     options=[check_when_class_sanity_is_on],
+                                                     filtered_resolution=True))
 
     if PYROMANCER in checks_per_class:
         # Set the remaining kingdoms rules
@@ -354,7 +415,9 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
             if kingdom_name not in excluded_kingdoms:
                 kingdom_to_class = world.get_entrance(kingdom_name + " - " + PYROMANCER)
-                world.set_rule(kingdom_to_class, class_sanity_is_off | Has(PYROMANCER))
+                world.set_rule(kingdom_to_class, Has(PYROMANCER,
+                                                     options=[check_when_class_sanity_is_on],
+                                                     filtered_resolution=True))
 
     if GRENADIER in checks_per_class:
         # Set the remaining kingdoms rules
@@ -365,7 +428,9 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
             if kingdom_name not in excluded_kingdoms:
                 kingdom_to_class = world.get_entrance(kingdom_name + " - " + GRENADIER)
-                world.set_rule(kingdom_to_class, class_sanity_is_off | Has(GRENADIER))
+                world.set_rule(kingdom_to_class, Has(GRENADIER,
+                                                     options=[check_when_class_sanity_is_on],
+                                                     filtered_resolution=True))
 
     if SHADOW in checks_per_class:
         # Set the remaining kingdoms rules
@@ -376,7 +441,9 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
 
             if kingdom_name not in excluded_kingdoms:
                 kingdom_to_class = world.get_entrance(kingdom_name + " - " + SHADOW)
-                world.set_rule(kingdom_to_class, class_sanity_is_off | Has(SHADOW))
+                world.set_rule(kingdom_to_class, Has(SHADOW,
+                                                     options=[check_when_class_sanity_is_on],
+                                                     filtered_resolution=True))
 
     # Find the classes that will have checks in the last kingdom
     class_checks_for_boss = [class_names for class_names in CLASS_NAMES
@@ -387,12 +454,16 @@ def set_all_entrance_rules(world: RabbitAndSteelWorld) -> None:
     if PINNACLE not in excluded_kingdoms:
         for moonlit_class in class_checks_for_boss:
             class_moonlit = world.get_entrance(PINNACLE + " - " + moonlit_class)
-            world.set_rule(class_moonlit, class_sanity_is_off | Has(moonlit_class))
+            world.set_rule(class_moonlit, Has(moonlit_class,
+                                              options=[check_when_class_sanity_is_on],
+                                              filtered_resolution=True))
 
     if POOL not in excluded_kingdoms:
         for moonlit_class in class_checks_for_boss:
             class_moonlit = world.get_entrance(POOL + " - " + moonlit_class)
-            world.set_rule(class_moonlit, class_sanity_is_off | Has(moonlit_class))
+            world.set_rule(class_moonlit, Has(moonlit_class,
+                                              options=[check_when_class_sanity_is_on],
+                                              filtered_resolution=True))
 
 
 def set_all_location_rules(world: RabbitAndSteelWorld) -> None:
